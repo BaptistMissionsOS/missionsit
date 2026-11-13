@@ -1,0 +1,141 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:title",
+ "creation": "2026-11-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "status",
+  "missionary",
+  "supporter_group",
+  "column_break_1",
+  "subject",
+  "prayer_letter",
+  "scheduled_date",
+  "sent_date",
+  "recipients_count",
+  "section_break_2",
+  "content",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nScheduled\nSent",
+   "default": "Draft",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "missionary",
+   "fieldtype": "Link",
+   "label": "Missionary",
+   "options": "Missionary",
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "supporter_group",
+   "fieldtype": "Link",
+   "label": "Supporter Group",
+   "options": "Supporter Group"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "label": "Subject",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "prayer_letter",
+   "fieldtype": "Link",
+   "label": "Prayer Letter",
+   "options": "Prayer Letter"
+  },
+  {
+   "fieldname": "scheduled_date",
+   "fieldtype": "Datetime",
+   "label": "Scheduled Date"
+  },
+  {
+   "fieldname": "sent_date",
+   "fieldtype": "Datetime",
+   "label": "Sent Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recipients_count",
+   "fieldtype": "Int",
+   "label": "Recipients",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "content",
+   "fieldtype": "Text Editor",
+   "label": "Content"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Missions Email Campaign",
+ "name": "Email Campaign",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Missionary",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "title,subject",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "title",
+ "track_changes": 1
+}

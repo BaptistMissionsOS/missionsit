@@ -1,0 +1,152 @@
+{
+ "card_fields": [
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "trip",
+   "icon": "map",
+   "idx": 1,
+   "name": "ta_card_trip",
+   "parent": "Trip Applications",
+   "parentfield": "card_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "email",
+   "icon": "mail",
+   "idx": 2,
+   "name": "ta_card_email",
+   "parent": "Trip Applications",
+   "parentfield": "card_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "application_date",
+   "icon": "calendar",
+   "idx": 3,
+   "name": "ta_card_date",
+   "parent": "Trip Applications",
+   "parentfield": "card_fields",
+   "parenttype": "Kanban Board"
+  }
+ ],
+ "columns": [
+  {
+   "column_name": "Submitted",
+   "doctype": "Kanban Board Column",
+   "idx": 1,
+   "indicator": "Orange",
+   "name": "ta_col_submitted",
+   "parent": "Trip Applications",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  },
+  {
+   "column_name": "Under Review",
+   "doctype": "Kanban Board Column",
+   "idx": 2,
+   "indicator": "Purple",
+   "name": "ta_col_review",
+   "parent": "Trip Applications",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  },
+  {
+   "column_name": "Accepted",
+   "doctype": "Kanban Board Column",
+   "idx": 3,
+   "indicator": "Green",
+   "name": "ta_col_accepted",
+   "parent": "Trip Applications",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  },
+  {
+   "column_name": "Waitlist",
+   "doctype": "Kanban Board Column",
+   "idx": 4,
+   "indicator": "Blue",
+   "name": "ta_col_waitlist",
+   "parent": "Trip Applications",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  },
+  {
+   "column_name": "Rejected",
+   "doctype": "Kanban Board Column",
+   "idx": 5,
+   "indicator": "Gray",
+   "name": "ta_col_rejected",
+   "parent": "Trip Applications",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  }
+ ],
+ "creation": "2026-11-12 19:50:00.000000",
+ "docstatus": 0,
+ "doctype": "Kanban Board",
+ "field_name": "status",
+ "filters": "[]",
+ "footer_date_field": "Modified",
+ "group_by_fields": [
+  {
+   "doctype": "Kanban Board Group Field",
+   "fieldname": "trip",
+   "idx": 1,
+   "name": "ta_group_trip",
+   "parent": "Trip Applications",
+   "parentfield": "group_by_fields",
+   "parenttype": "Kanban Board"
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "kanban_board_name": "Trip Applications",
+ "modified": "2026-11-12 19:50:00.000000",
+ "modified_by": "Administrator",
+ "module": "Missions Trip Application",
+ "name": "Trip Applications",
+ "owner": "Administrator",
+ "preview_fields": [
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "trip",
+   "idx": 1,
+   "name": "ta_prev_trip",
+   "parent": "Trip Applications",
+   "parentfield": "preview_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "email",
+   "idx": 2,
+   "name": "ta_prev_email",
+   "parent": "Trip Applications",
+   "parentfield": "preview_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "application_date",
+   "idx": 3,
+   "name": "ta_prev_date",
+   "parent": "Trip Applications",
+   "parentfield": "preview_fields",
+   "parenttype": "Kanban Board"
+  }
+ ],
+ "private": 0,
+ "reference_doctype": "Trip Application",
+ "show_assigned_to": 1,
+ "show_labels": 0,
+ "show_tags_on_card": 0,
+ "title_field": "applicant_name",
+ "use_kanban_v2": 1
+}

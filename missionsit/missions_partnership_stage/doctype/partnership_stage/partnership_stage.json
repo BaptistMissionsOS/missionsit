@@ -1,0 +1,91 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:stage_name",
+ "creation": "2026-11-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "stage_name",
+  "stage_order",
+  "is_active",
+  "column_break_1",
+  "color",
+  "probability",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "stage_name",
+   "fieldtype": "Data",
+   "label": "Stage Name",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "stage_order",
+   "fieldtype": "Int",
+   "label": "Order",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active",
+   "default": "1",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Color"
+  },
+  {
+   "fieldname": "probability",
+   "fieldtype": "Percent",
+   "label": "Probability (%)"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Missions Partnership Stage",
+ "name": "Partnership Stage",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "read": 1,
+   "report": 1,
+   "role": "Missionary"
+  }
+ ],
+ "sort_field": "stage_order",
+ "sort_order": "ASC",
+ "title_field": "stage_name",
+ "track_changes": 0
+}

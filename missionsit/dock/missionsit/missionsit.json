@@ -1,0 +1,55 @@
+{
+ "app": "missionsit",
+ "creation": "2026-11-12 00:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Dock",
+ "idx": 0,
+ "items": [
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "chart-column",
+   "link_to": "Summary",
+   "link_type": "Sidebar",
+   "title": "Summary"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "users",
+   "link_to": "People",
+   "link_type": "Sidebar",
+   "title": "People"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "circle-dollar-sign",
+   "link_to": "Giving",
+   "link_type": "Sidebar",
+   "title": "Giving"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "plane",
+   "link_to": "Trips",
+   "link_type": "Sidebar",
+   "title": "Trips"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "settings",
+   "link_to": "Settings",
+   "link_type": "Sidebar",
+   "title": "Settings"
+  }
+ ],
+ "modified": "2026-11-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "missionsit",
+ "owner": "Administrator",
+ "standard": 1,
+ "user": ""
+}

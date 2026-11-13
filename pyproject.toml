@@ -1,0 +1,29 @@
+[project]
+name = "missionsit"
+authors = [{ name = "MissionSit", email = "admin@missionsit.com" }]
+description = "Missionary and ministry fundraising and supporter management."
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = []
+
+[tool.bench.frappe-dependencies]
+frappe = ">=16.0.0,<17.0.0"
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "UP", "B", "RUF"]
+ignore = ["E101", "E402", "E501", "E741", "F401", "F403", "F405", "W191"]
+typing-modules = ["frappe.types.DF"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "tab"
+docstring-code-format = true

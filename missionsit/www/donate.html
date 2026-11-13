@@ -1,0 +1,97 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ _(page.title) }}{% endblock %}
+
+{% block page_content %}
+<div class="container py-5" style="max-width: 640px">
+	<h1 class="mb-1">{{ page.title }}</h1>
+	<p class="text-muted">{{ _("Supporting {0}").format(missionary_name) }}</p>
+
+	{% if page.goal_amount %}
+		<p class="h5 mb-4">{{ _("Goal: {0} {1}").format(frappe.utils.fmt_money(page.goal_amount, currency=page.currency), page.currency or "") }}</p>
+	{% endif %}
+
+	{% if page.description %}
+		<div class="mb-4">{{ page.description }}</div>
+	{% endif %}
+
+	<form id="missionsit-donate-form" class="card p-4">
+		<div class="mb-3">
+			<label for="donor-email" class="form-label">{{ _("Your email") }}</label>
+			<input type="email" id="donor-email" class="form-control" required>
+		</div>
+		<div class="mb-3">
+			<label for="donation-amount" class="form-label">{{ _("Amount") }}</label>
+			<input type="number" id="donation-amount" class="form-control" min="{{ page.minimum_amount or 1 }}" step="1" required>
+			{% if page.minimum_amount %}
+				<small class="form-text text-muted">{{ _("Minimum: {0}").format(frappe.utils.fmt_money(page.minimum_amount, currency=page.currency)) }}</small>
+			{% endif %}
+		</div>
+		{% if page.allow_recurring %}
+			<div class="form-check mb-3">
+				<input class="form-check-input" type="checkbox" id="is-recurring">
+				<label class="form-check-label" for="is-recurring">{{ _("Make this a recurring gift") }}</label>
+			</div>
+			<div class="mb-3" id="frequency-wrap" style="display:none">
+				<label for="frequency" class="form-label">{{ _("Frequency") }}</label>
+				<select id="frequency" class="form-select">
+					<option value="Monthly">{{ _("Monthly") }}</option>
+					<option value="Quarterly">{{ _("Quarterly") }}</option>
+					<option value="Annual">{{ _("Annual") }}</option>
+				</select>
+			</div>
+		{% endif %}
+		<button type="submit" class="btn btn-primary w-100">{{ _("Give securely") }}</button>
+		<p id="form-error" class="text-danger mt-3" style="display:none"></p>
+	</form>
+
+	{% if page.thank_you_message %}
+		<div class="mt-4 small text-muted">{{ page.thank_you_message }}</div>
+	{% endif %}
+</div>
+
+<script>
+(function () {
+	var form = document.getElementById("missionsit-donate-form");
+	var recurring = document.getElementById("is-recurring");
+	var freqWrap = document.getElementById("frequency-wrap");
+	if (recurring) {
+		recurring.addEventListener("change", function () {
+			freqWrap.style.display = recurring.checked ? "block" : "none";
+		});
+	}
+	form.addEventListener("submit", async function (e) {
+		e.preventDefault();
+		var err = document.getElementById("form-error");
+		err.style.display = "none";
+		var payload = {
+			donation_page: {{ page.name|tojson }},
+			supporter_email: document.getElementById("donor-email").value,
+			amount: document.getElementById("donation-amount").value,
+			recurring: recurring && recurring.checked ? 1 : 0,
+			frequency: freqWrap ? document.getElementById("frequency").value : "Monthly",
+		};
+		try {
+			var response = await fetch("/api/method/missionsit.missions_payments.stripe.start_checkout", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+					"X-Frappe-CSRF-Token": window.csrf_token || "",
+				},
+				body: new URLSearchParams(payload).toString(),
+			});
+			var data = await response.json();
+			if (data.message && data.message.payment_url) {
+				window.location = data.message.payment_url;
+			} else {
+				err.textContent = (data._server_messages ? JSON.parse(data._server_messages).map(function (m) { return JSON.parse(m).message; }).join(" ") : "{{ _('Could not start checkout.') }}");
+				err.style.display = "block";
+			}
+		} catch (ex) {
+			err.textContent = ex.message;
+			err.style.display = "block";
+		}
+	});
+})();
+</script>
+{% endblock %}
