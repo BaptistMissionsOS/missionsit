@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:fund_name",
+ "creation": "2026-11-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "fund_name",
+  "missionary",
+  "is_default",
+  "status",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "fund_name",
+   "fieldtype": "Data",
+   "label": "Fund Name",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "missionary",
+   "fieldtype": "Link",
+   "label": "Missionary",
+   "options": "Missionary",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "label": "Default Fund"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive",
+   "default": "Active",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "links": [
+  {
+   "group": "Giving",
+   "link_doctype": "Pledge",
+   "link_fieldname": "fund"
+  },
+  {
+   "group": "Giving",
+   "link_doctype": "Donation",
+   "link_fieldname": "fund"
+  }
+ ],
+ "modified": "2026-11-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Missions Finances",
+ "name": "Fund",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "read": 1,
+   "report": 1,
+   "role": "Missionary",
+   "write": 1
+  }
+ ],
+ "sort_field": "fund_name",
+ "sort_order": "ASC",
+ "title_field": "fund_name",
+ "track_changes": 0
+}

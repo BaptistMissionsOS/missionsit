@@ -1,0 +1,162 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-11-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "title",
+  "task_type",
+  "tag",
+  "status",
+  "priority",
+  "column_break_1",
+  "missionary",
+  "supporter",
+  "assigned_to",
+  "due_date",
+  "completed_on",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "TASK-.YYYY.-.#####"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "task_type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "\nThank You\nCall\nEmail\nLetter\nVisit\nSMS\nAppointment\nOther",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "tag",
+   "fieldtype": "Select",
+   "label": "Tag",
+   "options": "\nThank\nPartnership Challenge\nFollow-up\nBirthday\nLapsed\nOther"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nCompleted\nCancelled",
+   "default": "Open",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Low\nMedium\nHigh",
+   "default": "Medium",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "missionary",
+   "fieldtype": "Link",
+   "label": "Missionary",
+   "options": "Missionary",
+   "reqd": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "supporter",
+   "fieldtype": "Link",
+   "label": "Supporter",
+   "options": "Supporter",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "label": "Assigned To",
+   "options": "User"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "completed_on",
+   "fieldtype": "Datetime",
+   "label": "Completed On"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Missions Correspondence",
+ "name": "Ministry Task",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Missionary",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "supporter,task_type,status",
+ "sort_field": "due_date",
+ "sort_order": "ASC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Open"
+  },
+  {
+   "color": "Green",
+   "title": "Completed"
+  },
+  {
+   "color": "Gray",
+   "title": "Cancelled"
+  }
+ ],
+ "title_field": "title",
+ "track_changes": 1
+}

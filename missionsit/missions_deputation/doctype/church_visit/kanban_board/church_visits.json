@@ -1,0 +1,139 @@
+{
+ "card_fields": [
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "church",
+   "icon": "org",
+   "idx": 1,
+   "name": "cv_card_church",
+   "parent": "Church Visits",
+   "parentfield": "card_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "visit_date",
+   "icon": "calendar",
+   "idx": 2,
+   "name": "cv_card_date",
+   "parent": "Church Visits",
+   "parentfield": "card_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "missionary",
+   "icon": "user",
+   "idx": 3,
+   "name": "cv_card_missionary",
+   "parent": "Church Visits",
+   "parentfield": "card_fields",
+   "parenttype": "Kanban Board"
+  }
+ ],
+ "columns": [
+  {
+   "column_name": "Planned",
+   "doctype": "Kanban Board Column",
+   "idx": 1,
+   "indicator": "Orange",
+   "name": "cv_col_planned",
+   "parent": "Church Visits",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  },
+  {
+   "column_name": "Completed",
+   "doctype": "Kanban Board Column",
+   "idx": 2,
+   "indicator": "Green",
+   "name": "cv_col_completed",
+   "parent": "Church Visits",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  },
+  {
+   "column_name": "Cancelled",
+   "doctype": "Kanban Board Column",
+   "idx": 3,
+   "indicator": "Gray",
+   "name": "cv_col_cancelled",
+   "parent": "Church Visits",
+   "parentfield": "columns",
+   "parenttype": "Kanban Board",
+   "status": "Active"
+  }
+ ],
+ "creation": "2026-11-12 19:50:00.000000",
+ "docstatus": 0,
+ "doctype": "Kanban Board",
+ "field_name": "status",
+ "filters": "[]",
+ "footer_date_field": "Modified",
+ "group_by_fields": [
+  {
+   "doctype": "Kanban Board Group Field",
+   "fieldname": "outcome",
+   "idx": 1,
+   "name": "cv_group_outcome",
+   "parent": "Church Visits",
+   "parentfield": "group_by_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Group Field",
+   "fieldname": "visit_type",
+   "idx": 2,
+   "name": "cv_group_type",
+   "parent": "Church Visits",
+   "parentfield": "group_by_fields",
+   "parenttype": "Kanban Board"
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "kanban_board_name": "Church Visits",
+ "modified": "2026-11-12 19:50:00.000000",
+ "modified_by": "Administrator",
+ "module": "Missions Deputation",
+ "name": "Church Visits",
+ "owner": "Administrator",
+ "preview_fields": [
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "visit_type",
+   "idx": 1,
+   "name": "cv_prev_type",
+   "parent": "Church Visits",
+   "parentfield": "preview_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "outcome",
+   "idx": 2,
+   "name": "cv_prev_outcome",
+   "parent": "Church Visits",
+   "parentfield": "preview_fields",
+   "parenttype": "Kanban Board"
+  },
+  {
+   "doctype": "Kanban Board Field",
+   "fieldname": "visit_date",
+   "idx": 3,
+   "name": "cv_prev_date",
+   "parent": "Church Visits",
+   "parentfield": "preview_fields",
+   "parenttype": "Kanban Board"
+  }
+ ],
+ "private": 0,
+ "reference_doctype": "Church Visit",
+ "show_assigned_to": 1,
+ "show_labels": 0,
+ "show_tags_on_card": 0,
+ "title_field": "church",
+ "use_kanban_v2": 1
+}

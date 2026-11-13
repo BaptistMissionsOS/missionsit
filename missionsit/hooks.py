@@ -30,53 +30,50 @@ website_route_rules = [
 
 doc_events = {
 	"Donation": {
-		"before_insert": "missionsit.missions_donation.doctype.donation.donation.mark_first_gift",
+		"before_insert": "missionsit.missions_finances.doctype.donation.donation.mark_first_gift",
 		"after_insert": [
-			"missionsit.missions_donation.doctype.donation.donation.create_thank_you_task",
-			"missionsit.missions_trip_participant.doctype.trip_participant.trip_participant.refresh_amount_raised",
-			"missionsit.missions_campaign.doctype.campaign.campaign.refresh_amount_raised",
+			"missionsit.missions_finances.doctype.donation.donation.create_thank_you_task",
+			"missionsit.missions_trip.doctype.trip_participant.trip_participant.refresh_amount_raised",
+			"missionsit.missions_website.doctype.campaign.campaign.refresh_amount_raised",
 		],
 		"on_trash": [
-			"missionsit.missions_trip_participant.doctype.trip_participant.trip_participant.refresh_amount_raised",
-			"missionsit.missions_campaign.doctype.campaign.campaign.refresh_amount_raised",
+			"missionsit.missions_trip.doctype.trip_participant.trip_participant.refresh_amount_raised",
+			"missionsit.missions_website.doctype.campaign.campaign.refresh_amount_raised",
 		],
 	},
 	"Payment Request": {
-		"on_update_after_submit": "missionsit.missions_payments.stripe.on_payment_request_update",
+		"on_update_after_submit": "missionsit.missions_finances.doctype.payments.stripe.on_payment_request_update",
 	},
 }
 
 permission_query_conditions = {
-	"Supporter": "missionsit.missions_supporter.doctype.supporter.supporter.get_permission_query_conditions",
-	"Pledge": "missionsit.missions_pledge.doctype.pledge.pledge.get_permission_query_conditions",
-	"Donation": "missionsit.missions_donation.doctype.donation.donation.get_permission_query_conditions",
-	"Ministry Task": "missionsit.missions_ministry_task.doctype.ministry_task.ministry_task.get_permission_query_conditions",
-	"Interaction": "missionsit.missions_interaction.doctype.interaction.interaction.get_permission_query_conditions",
-	"Prayer Letter": "missionsit.missions_prayer_letter.doctype.prayer_letter.prayer_letter.get_permission_query_conditions",
-	"Church Visit": "missionsit.missions_church_visit.doctype.church_visit.church_visit.get_permission_query_conditions",
-	"Donation Page": "missionsit.missions_donation_page.doctype.donation_page.donation_page.get_permission_query_conditions",
-	"Recurring Donation": "missionsit.missions_recurring_donation.doctype.recurring_donation.recurring_donation.get_permission_query_conditions",
-	"Missionary": "missionsit.missions_payments.scope.missionary_permission_query",
+	"Supporter": "missionsit.missions_people.doctype.supporter.supporter.get_permission_query_conditions",
+	"Pledge": "missionsit.missions_finances.doctype.pledge.pledge.get_permission_query_conditions",
+	"Donation": "missionsit.missions_finances.doctype.donation.donation.get_permission_query_conditions",
+	"Ministry Task": "missionsit.missions_correspondence.doctype.ministry_task.ministry_task.get_permission_query_conditions",
+	"Interaction": "missionsit.missions_people.doctype.interaction.interaction.get_permission_query_conditions",
+	"Prayer Letter": "missionsit.missions_correspondence.doctype.prayer_letter.prayer_letter.get_permission_query_conditions",
+	"Church Visit": "missionsit.missions_deputation.doctype.church_visit.church_visit.get_permission_query_conditions",
+	"Donation Page": "missionsit.missions_finances.doctype.donation_page.donation_page.get_permission_query_conditions",
+	"Recurring Donation": "missionsit.missions_finances.doctype.recurring_donation.recurring_donation.get_permission_query_conditions",
+	"Missionary": "missionsit.missions_finances.doctype.payments.scope.missionary_permission_query",
 }
 
 has_permission = {
-	"Supporter": "missionsit.missions_supporter.doctype.supporter.supporter.has_permission",
-	"Pledge": "missionsit.missions_pledge.doctype.pledge.pledge.has_permission",
-	"Donation": "missionsit.missions_donation.doctype.donation.donation.has_permission",
-	"Ministry Task": "missionsit.missions_ministry_task.doctype.ministry_task.ministry_task.has_permission",
-	"Interaction": "missionsit.missions_interaction.doctype.interaction.interaction.has_permission",
-	"Prayer Letter": "missionsit.missions_prayer_letter.doctype.prayer_letter.prayer_letter.has_permission",
-	"Church Visit": "missionsit.missions_church_visit.doctype.church_visit.church_visit.has_permission",
-	"Donation Page": "missionsit.missions_donation_page.doctype.donation_page.donation_page.has_permission",
-	"Recurring Donation": "missionsit.missions_recurring_donation.doctype.recurring_donation.recurring_donation.has_permission",
+	"Supporter": "missionsit.missions_people.doctype.supporter.supporter.has_permission",
+	"Pledge": "missionsit.missions_finances.doctype.pledge.pledge.has_permission",
+	"Donation": "missionsit.missions_finances.doctype.donation.donation.has_permission",
+	"Ministry Task": "missionsit.missions_correspondence.doctype.ministry_task.ministry_task.has_permission",
+	"Interaction": "missionsit.missions_people.doctype.interaction.interaction.has_permission",
+	"Prayer Letter": "missionsit.missions_correspondence.doctype.prayer_letter.prayer_letter.has_permission",
+	"Church Visit": "missionsit.missions_deputation.doctype.church_visit.church_visit.has_permission",
+	"Donation Page": "missionsit.missions_finances.doctype.donation_page.donation_page.has_permission",
+	"Recurring Donation": "missionsit.missions_finances.doctype.recurring_donation.recurring_donation.has_permission",
 }
 
 scheduler_events = {
 	"daily": [
-		"missionsit.missions_recurring_donation.doctype.recurring_donation.recurring_donation.advance_due_recurring_donations",
-		"missionsit.missions_ministry_task.automation.create_birthday_tasks",
-		"missionsit.missions_ministry_task.automation.create_anniversary_tasks",
-		"missionsit.missions_ministry_task.automation.create_lapsed_donor_tasks",
-		"missionsit.missions_email_campaign.doctype.email_campaign.email_campaign_scheduler.send_due_campaigns",
+		"missionsit.missions_finances.doctype.recurring_donation.recurring_donation.advance_due_recurring_donations",
+		"missionsit.missions_correspondence.doctype.email_campaign.email_campaign_scheduler.send_due_campaigns",
 	],
 }

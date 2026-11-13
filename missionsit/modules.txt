@@ -1,23 +1,11 @@
-Missions Organization
-Missions Missionary
-Missions Supporter
-Missions Partnership Stage
-Missions Supporter Group
-Missions Supporter Referral
-Missions Fund
-Missions Pledge
-Missions Donation
-Missions Ministry Task
-Missions Interaction
-Missions Prayer Letter
-Missions Church
-Missions Church Visit
-Missions Donation Page
-Missions Recurring Donation
-Missions Trip
-Missions Trip Participant
-Missions Trip Application
-Missions Campaign
-Missions Email Campaign
-Missions Payments
+Missions Correspondence
+Missions Deputation
+Missions Finances
+Missions Help
+Missions Ministries
+Missions People
+Missions Prayers
 Missions Summary
+Missions Tentmaker
+Missions Trip
+Missions Website
