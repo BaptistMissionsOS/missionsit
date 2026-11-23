@@ -24,7 +24,15 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "hands-praying",
+   "icon": "book-user",
+   "link_to": "Directory",
+   "link_type": "Sidebar",
+   "title": "Directory"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "hand-heart",
    "link_to": "Prayers",
    "link_type": "Sidebar",
    "title": "Prayers"
@@ -56,10 +64,26 @@
   {
    "added": 0,
    "hidden": 0,
+   "icon": "luggage",
+   "link_to": "Furlough",
+   "link_type": "Sidebar",
+   "title": "Furlough"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
    "icon": "briefcase",
    "link_to": "Tentmaker",
    "link_type": "Sidebar",
    "title": "Tentmaker"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "store",
+   "link_to": "Marketplace",
+   "link_type": "Sidebar",
+   "title": "Marketplace"
   },
   {
    "added": 0,
@@ -81,14 +105,14 @@
    "added": 0,
    "hidden": 0,
    "icon": "globe",
-   "link_to": "Website",
+   "link_to": "Mit Website",
    "link_type": "Sidebar",
-   "title": "Website"
+   "title": "Mit Website"
   },
   {
    "added": 0,
    "hidden": 0,
-   "icon": "circle-help",
+   "icon": "life-buoy",
    "link_to": "Help",
    "link_type": "Sidebar",
    "title": "Help"
@@ -102,7 +126,7 @@
    "title": "Settings"
   }
  ],
- "modified": "2026-11-13 00:00:00.000000",
+ "modified": "2026-11-23 12:00:00.000000",
  "modified_by": "Administrator",
  "name": "missionsit",
  "owner": "Administrator",

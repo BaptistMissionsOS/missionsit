@@ -22,7 +22,7 @@ MODULE_REMAP = {
 	"Missions Prayer Letter": "Missions Correspondence",
 	"Missions Trip Application": "Missions Trip",
 	"Missions Trip Participant": "Missions Trip",
-	"Missions Campaign": "Missions Website",
+	"Missions Campaign": "Mit Website",
 }
 
 MODULE_LINKED_DOCTYPES = (

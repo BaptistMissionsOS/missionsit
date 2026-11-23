@@ -71,7 +71,7 @@
    "fieldname": "missionary",
    "fieldtype": "Link",
    "label": "Missionary",
-   "options": "Missionary",
+   "options": "Missions Missionary",
    "reqd": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,

@@ -1,11 +1,15 @@
 Missions Correspondence
 Missions Deputation
+Missions Directory
 Missions Finances
+Missions Furlough
 Missions Help
+Missions Marketplace
 Missions Ministries
 Missions People
 Missions Prayers
+Missions Setup
 Missions Summary
 Missions Tentmaker
 Missions Trip
-Missions Website
+Mit Website

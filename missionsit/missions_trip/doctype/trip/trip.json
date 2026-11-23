@@ -42,7 +42,7 @@
    "fieldname": "missionary",
    "fieldtype": "Link",
    "label": "Missionary",
-   "options": "Missionary",
+   "options": "Missions Missionary",
    "in_standard_filter": 1
   },
   {

@@ -1,0 +1,136 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:campaign_name",
+ "creation": "2026-11-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "campaign_name",
+  "status",
+  "missionary",
+  "campaign_type",
+  "column_break_1",
+  "start_date",
+  "end_date",
+  "goal_amount",
+  "amount_raised",
+  "section_break_2",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "campaign_name",
+   "fieldtype": "Data",
+   "label": "Campaign Name",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nActive\nCompleted\nCancelled",
+   "default": "Draft",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "missionary",
+   "fieldtype": "Link",
+   "label": "Missionary",
+   "options": "Missions Missionary",
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "campaign_type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "\nPeer-to-Peer\nSpecial Project\nMatching\nOther",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "goal_amount",
+   "fieldtype": "Currency",
+   "label": "Goal Amount",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "amount_raised",
+   "fieldtype": "Currency",
+   "label": "Amount Raised",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  }
+ ],
+ "links": [
+  {
+   "group": "Giving",
+   "link_doctype": "Donation",
+   "link_fieldname": "campaign"
+  }
+ ],
+ "modified": "2026-11-23 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Mit Website",
+ "name": "Mit Website Campaign",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Missionary",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "campaign_name,missionary",
+ "sort_field": "start_date",
+ "sort_order": "DESC",
+ "title_field": "campaign_name",
+ "track_changes": 1
+}

@@ -13,12 +13,12 @@ add_to_apps_screen = [
 		"name": "missionsit",
 		"logo": "/assets/frappe/images/frappe-framework-logo.svg",
 		"title": "MissionsIT",
-		"route": "/desk/missionsit",
+		"route": "/desk/summary",
 	}
 ]
 
 fixtures = [
-	{"dt": "Role", "filters": [["name", "in", ["Missionary", "Organization Admin", "Trip Leader"]]]},
+	{"dt": "Role", "filters": [["name", "in", ["Missionary", "Organization Admin", "Trip Leader", "Church User", "Agency User"]]]},
 ]
 
 after_install = "missionsit.setup.after_install"
@@ -34,11 +34,11 @@ doc_events = {
 		"after_insert": [
 			"missionsit.missions_finances.doctype.donation.donation.create_thank_you_task",
 			"missionsit.missions_trip.doctype.trip_participant.trip_participant.refresh_amount_raised",
-			"missionsit.missions_website.doctype.campaign.campaign.refresh_amount_raised",
+			"missionsit.mit_website.doctype.mit_website_campaign.mit_website_campaign.refresh_amount_raised",
 		],
 		"on_trash": [
 			"missionsit.missions_trip.doctype.trip_participant.trip_participant.refresh_amount_raised",
-			"missionsit.missions_website.doctype.campaign.campaign.refresh_amount_raised",
+			"missionsit.mit_website.doctype.mit_website_campaign.mit_website_campaign.refresh_amount_raised",
 		],
 	},
 	"Payment Request": {
@@ -53,10 +53,11 @@ permission_query_conditions = {
 	"Ministry Task": "missionsit.missions_correspondence.doctype.ministry_task.ministry_task.get_permission_query_conditions",
 	"Interaction": "missionsit.missions_people.doctype.interaction.interaction.get_permission_query_conditions",
 	"Prayer Letter": "missionsit.missions_correspondence.doctype.prayer_letter.prayer_letter.get_permission_query_conditions",
+	"Church": "missionsit.missions_directory.doctype.church.church.get_permission_query_conditions",
 	"Church Visit": "missionsit.missions_deputation.doctype.church_visit.church_visit.get_permission_query_conditions",
 	"Donation Page": "missionsit.missions_finances.doctype.donation_page.donation_page.get_permission_query_conditions",
 	"Recurring Donation": "missionsit.missions_finances.doctype.recurring_donation.recurring_donation.get_permission_query_conditions",
-	"Missionary": "missionsit.missions_finances.doctype.payments.scope.missionary_permission_query",
+	"Missions Missionary": "missionsit.missions_finances.doctype.payments.scope.missionary_permission_query",
 }
 
 has_permission = {
@@ -66,6 +67,7 @@ has_permission = {
 	"Ministry Task": "missionsit.missions_correspondence.doctype.ministry_task.ministry_task.has_permission",
 	"Interaction": "missionsit.missions_people.doctype.interaction.interaction.has_permission",
 	"Prayer Letter": "missionsit.missions_correspondence.doctype.prayer_letter.prayer_letter.has_permission",
+	"Church": "missionsit.missions_directory.doctype.church.church.has_permission",
 	"Church Visit": "missionsit.missions_deputation.doctype.church_visit.church_visit.has_permission",
 	"Donation Page": "missionsit.missions_finances.doctype.donation_page.donation_page.has_permission",
 	"Recurring Donation": "missionsit.missions_finances.doctype.recurring_donation.recurring_donation.has_permission",

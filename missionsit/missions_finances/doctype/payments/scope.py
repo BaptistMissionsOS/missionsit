@@ -20,12 +20,12 @@ def missionary_permission_query(user: str) -> str:
 		if not organizations:
 			return "1=0"
 		quoted = ", ".join(frappe.db.escape(o) for o in organizations)
-		return f"`tabMissionary`.`organization` in ({quoted})"
+		return f"`tabMissions Missionary`.`organization` in ({quoted})"
 	if "Missionary" in roles:
-		missionary = frappe.db.get_value("Missionary", {"user": user}, "name")
+		missionary = frappe.db.get_value("Missions Missionary", {"user": user}, "name")
 		if not missionary:
 			return "1=0"
-		return f"`tabMissionary`.`name` = {frappe.db.escape(missionary)}"
+		return f"`tabMissions Missionary`.`name` = {frappe.db.escape(missionary)}"
 	return ""
 
 

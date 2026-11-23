@@ -24,6 +24,6 @@ def get_context(context):
 		raise frappe.DoesNotExistError(frappe._("Donation page not found."))
 	context.no_cache = 1
 	context.page = page
-	context.missionary_name = frappe.db.get_value("Missionary", page.missionary, "missionary_name")
+	context.missionary_name = frappe.db.get_value("Missions Missionary", page.missionary, "missionary_name")
 	context.title = page.title
 	return context

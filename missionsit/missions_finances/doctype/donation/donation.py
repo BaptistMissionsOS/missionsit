@@ -51,7 +51,7 @@ def get_permission_query_conditions(user: str) -> str:
 	"""Limit Missionary role users to donations for their own missionary."""
 	if "Missionary" not in frappe.get_roles(user):
 		return ""
-	missionary = frappe.db.get_value("Missionary", {"user": user}, "name")
+	missionary = frappe.db.get_value("Missions Missionary", {"user": user}, "name")
 	if not missionary:
 		return "1=0"
 	return f"`tabDonation`.`missionary` = {frappe.db.escape(missionary)}"
@@ -61,5 +61,5 @@ def has_permission(doc, user: str, permission_type: str = "read") -> bool:
 	"""Allow Missionary role only for records linked to their missionary."""
 	if "System Manager" in frappe.get_roles(user):
 		return True
-	missionary = frappe.db.get_value("Missionary", {"user": user}, "name")
+	missionary = frappe.db.get_value("Missions Missionary", {"user": user}, "name")
 	return doc.missionary == missionary
