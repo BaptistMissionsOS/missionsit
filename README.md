@@ -8,51 +8,53 @@ One missionary manages their supporters from first contact through active partne
 
 ## DocTypes
 
+Every DocType is namespaced under its module (`Mit <Module> <Name>`) so no DocType or module name can shadow another app.
+
 ### People and giving
 
 | DocType | Purpose |
 |---|---|
-| **Organization** | Sending churches, agencies and mission boards |
-| **Missionary** | The central profile for each missionary |
-| **Supporter** | Individuals and families who partner with a missionary |
-| **Partnership Stage** | Funnel stages (Contact, Appointment, Presentation, Partner, Lapsed) |
-| **Supporter Group** | Named lists of supporters for targeted communication |
-| **Supporter Referral** | Tracks who referred a supporter to the missionary |
-| **Fund** | Named buckets for donations (General Support, Project funds) |
-| **Pledge** | A commitment to give at a set amount and frequency |
-| **Donation** | A recorded gift from a supporter |
-| **Recurring Donation** | A scheduled gift that renews on a frequency |
+| **Mit People Organization** | Sending churches, agencies and mission boards |
+| **Mit People Missionary** | The central profile for each missionary |
+| **Mit People Supporter** | Individuals and families who partner with a missionary |
+| **Mit Deputation Partnership Stage** | Funnel stages (Contact, Appointment, Presentation, Partner, Lapsed) |
+| **Mit People Supporter Group** | Named lists of supporters for targeted communication |
+| **Mit People Supporter Referral** | Tracks who referred a supporter to the missionary |
+| **Mit Finances Fund** | Named buckets for donations (General Support, Project funds) |
+| **Mit Finances Pledge** | A commitment to give at a set amount and frequency |
+| **Mit Finances Donation** | A recorded gift from a supporter |
+| **Mit Finances Recurring Donation** | A scheduled gift that renews on a frequency |
 
 ### Online giving
 
 | DocType | Purpose |
 |---|---|
-| **Donation Page** | A public /donate/<slug> page with Stripe checkout |
-| **Campaign** | A themed giving drive (peer-to-peer, special project, matching) |
-| **Email Campaign** | A supporter-group email broadcast with scheduled send |
+| **Mit Finances Donation Page** | A public /donate/<slug> page with Stripe checkout |
+| **Mit Website Campaign** | A themed giving drive (peer-to-peer, special project, matching) |
+| **Mit Correspondence Email Campaign** | A supporter-group email broadcast with scheduled send |
 
 ### Trips
 
 | DocType | Purpose |
 |---|---|
-| **Trip** | A short-term missions trip with destination, dates, and cost |
-| **Trip Application** | A public application submitted at /apply/<trip> |
-| **Trip Participant** | An accepted traveler with support-raising progress |
+| **Mit Trip** | A short-term missions trip with destination, dates, and cost |
+| **Mit Trip Application** | A public application submitted at /apply/<trip> |
+| **Mit Trip Participant** | An accepted traveler with support-raising progress |
 
 ### Churches
 
 | DocType | Purpose |
 |---|---|
-| **Church** | A supporting or prospective church |
-| **Church Visit** | A scheduled or completed visit to a church |
+| **Mit Directory Church** | A supporting or prospective church |
+| **Mit Deputation Church Visit** | A scheduled or completed visit to a church |
 
 ### Activity
 
 | DocType | Purpose |
 |---|---|
-| **Ministry Task** | Action items: thank-you notes, calls, visits, follow-ups |
-| **Interaction** | A logged touchpoint: call, email, meeting, gift |
-| **Prayer Letter** | Newsletters and update letters sent to supporters |
+| **Mit Correspondence Ministry Task** | Action items: thank-you notes, calls, visits, follow-ups |
+| **Mit People Interaction** | A logged touchpoint: call, email, meeting, gift |
+| **Mit Correspondence Prayer Letter** | Newsletters and update letters sent to supporters |
 
 ## Public pages
 
@@ -63,11 +65,11 @@ One missionary manages their supporters from first contact through active partne
 
 ## Automatic actions
 
-- **Donation after insert** creates a thank-you Ministry Task, links it to the Supporter, and updates any linked Pledge balance.
-- **Trip Application set to Accepted** promotes the applicant to a Trip Participant.
-- **Daily scheduler** advances Recurring Donations whose next_payment_date is due, and creates Ministry Tasks for upcoming birthdays, partnership anniversaries, and lapsed donors (no gift in the last 90 days).
-- **Email Campaign set to Scheduled** sends when its scheduled_date is reached.
-- **Payment Request paid** creates a Donation and, if recurring, a Recurring Donation record with the gateway subscription id.
+- **Mit Finances Donation after insert** creates a thank-you Mit Correspondence Ministry Task, links it to the Supporter, and updates any linked Mit Finances Pledge balance.
+- **Mit Trip Application set to Accepted** promotes the applicant to a Mit Trip Participant.
+- **Daily scheduler** advances Mit Finances Recurring Donations whose next_payment_date is due, and creates Ministry Tasks for upcoming birthdays, partnership anniversaries, and lapsed donors (no gift in the last 90 days).
+- **Mit Correspondence Email Campaign set to Scheduled** sends when its scheduled_date is reached.
+- **Payment Request paid** creates a Mit Finances Donation and, if recurring, a Mit Finances Recurring Donation record with the gateway subscription id.
 
 ## Installation
 
@@ -96,9 +98,9 @@ bench --site your-site.localhost migrate
 | Role | Access |
 |---|---|
 | **System Manager** | Full access to all records |
-| **Missionary** | Read and write only the records linked to their own Missionary record |
-| **Organization Admin** | Read and write Missionary and Donation records inside the organizations they administer |
-| **Trip Leader** | Read and write Trip, Trip Application, and Trip Participant records |
+| **Missionary** | Read and write only the records linked to their own Mit People Missionary record |
+| **Organization Admin** | Read and write Mit People Missionary and Mit Finances Donation records inside the organizations they administer |
+| **Trip Leader** | Read and write Mit Trip, Mit Trip Application, and Mit Trip Participant records |
 
 ## Before you open a pull request
 
