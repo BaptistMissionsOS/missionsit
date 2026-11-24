@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"helpIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"How-to articles and frequently asked questions for missionaries using MissionsIT.\", \"col\": 12}}, {\"id\": \"scArticles\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Articles\", \"col\": 6}}, {\"id\": \"scFaq\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"FAQ\", \"col\": 6}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Help",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Help",
  "name": "Help",
@@ -24,7 +24,22 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 14.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Articles",
+   "link_to": "Mit Help Articles",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "FAQ",
+   "link_to": "Mit Help FAQ",
+   "type": "DocType",
+   "color": "Green"
+  }
+ ],
  "standard": 1,
  "title": "Help",
  "type": "Workspace"

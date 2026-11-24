@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"tentmakerIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Part-time and full-time work a missionary takes abroad \\u2014 employer, hours, visa, and the business contacts behind it.\", \"col\": 12}}, {\"id\": \"scJob\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Job\", \"col\": 4}}, {\"id\": \"scBusinessContact\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Business Contact\", \"col\": 4}}, {\"id\": \"scSkills\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Skills & Services\", \"col\": 4}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Tentmaker",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Tentmaker",
  "name": "Tentmaker",
@@ -24,7 +24,27 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 9.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Job",
+   "link_to": "Mit Tentmaker Job",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "Business Contact",
+   "link_to": "Mit Tentmaker Business Contact",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Skills & Services",
+   "link_to": "Mit Tentmaker Skills Services",
+   "type": "DocType"
+  }
+ ],
  "standard": 1,
  "title": "Tentmaker",
  "type": "Workspace"

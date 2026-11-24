@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"tripsIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Short-term missions trips \\u2014 planning, applications, participants and expenses.\", \"col\": 12}}, {\"id\": \"scTrip\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Trip\", \"col\": 4}}, {\"id\": \"scApplication\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Trip Application\", \"col\": 4}}, {\"id\": \"scParticipant\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Trip Participant\", \"col\": 4}}, {\"id\": \"qlPendingApps\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Pending Applications\", \"col\": 6}}, {\"id\": \"qlActiveTrips\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Active Trips\", \"col\": 6}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Trips",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Trip",
  "name": "Trips",
@@ -21,10 +21,43 @@
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "Mit Trip Application",
+   "label": "Pending Applications",
+   "quick_list_filter": "[[\"status\", \"=\", \"Submitted\"]]"
+  },
+  {
+   "document_type": "Mit Trip",
+   "label": "Active Trips",
+   "quick_list_filter": "[[\"status\", \"=\", \"Open\"]]"
+  }
+ ],
  "roles": [],
  "sequence_id": 6.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Trip",
+   "link_to": "Mit Trip",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "Trip Application",
+   "link_to": "Mit Trip Application",
+   "type": "DocType",
+   "color": "Orange"
+  },
+  {
+   "doc_view": "List",
+   "label": "Trip Participant",
+   "link_to": "Mit Trip Participant",
+   "type": "DocType",
+   "color": "Green"
+  }
+ ],
  "standard": 1,
  "title": "Trips",
  "type": "Workspace"

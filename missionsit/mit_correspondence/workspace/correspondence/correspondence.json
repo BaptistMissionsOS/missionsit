@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"correspondenceIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Follow-up tasks, prayer letters and email campaigns \\u2014 everything you send to supporters.\", \"col\": 12}}, {\"id\": \"scTask\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Ministry Task\", \"col\": 4}}, {\"id\": \"scPrayerLetter\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Prayer Letter\", \"col\": 4}}, {\"id\": \"scEmailCampaign\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Email Campaign\", \"col\": 4}}, {\"id\": \"qlOpenTasks\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Open Tasks\", \"col\": 6}}, {\"id\": \"qlUpcomingCampaigns\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Upcoming Campaigns\", \"col\": 6}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Correspondence",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Correspondence",
  "name": "Correspondence",
@@ -21,10 +21,43 @@
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "Mit Correspondence Ministry Task",
+   "label": "Open Tasks",
+   "quick_list_filter": "[[\"status\", \"=\", \"Open\"]]"
+  },
+  {
+   "document_type": "Mit Correspondence Email Campaign",
+   "label": "Upcoming Campaigns",
+   "quick_list_filter": "[[\"status\", \"=\", \"Scheduled\"]]"
+  }
+ ],
  "roles": [],
  "sequence_id": 5.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Ministry Task",
+   "link_to": "Mit Correspondence Ministry Task",
+   "type": "DocType",
+   "color": "Orange"
+  },
+  {
+   "doc_view": "List",
+   "label": "Prayer Letter",
+   "link_to": "Mit Correspondence Prayer Letter",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "Email Campaign",
+   "link_to": "Mit Correspondence Email Campaign",
+   "type": "DocType",
+   "color": "Green"
+  }
+ ],
  "standard": 1,
  "title": "Correspondence",
  "type": "Workspace"
