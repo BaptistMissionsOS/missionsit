@@ -15,7 +15,7 @@ def get_context(context):
 		frappe.local.flags.redirect_location = "/"
 		raise frappe.Redirect
 	trip = frappe.db.get_value(
-		"Trip",
+		"Mit Trip",
 		{"name": trip_name, "status": ["in", ["Open", "Planning"]]},
 		["name", "trip_name", "destination", "start_date", "end_date", "description"],
 		as_dict=True,
@@ -40,11 +40,11 @@ def submit_application(
 	emergency_contact: str = "",
 ) -> dict:
 	"""Insert a Trip Application from a public form. Returns *{name}*."""
-	if not frappe.db.exists("Trip", {"name": trip, "status": ["in", ["Open", "Planning"]]}):
+	if not frappe.db.exists("Mit Trip", {"name": trip, "status": ["in", ["Open", "Planning"]]}):
 		frappe.throw(frappe._("Trip {0} is not accepting applications.").format(trip))
 	application = frappe.get_doc(
 		{
-			"doctype": "Trip Application",
+			"doctype": "Mit Trip Application",
 			"trip": trip,
 			"applicant_name": applicant_name,
 			"email": email,

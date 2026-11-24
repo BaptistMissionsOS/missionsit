@@ -1,6 +1,7 @@
 # Patches added in this section will be executed before doctypes are migrated
 [pre_model_sync]
 missionsit.patches.reorganize_modules
+missionsit.patches.rename_to_mit
 
 
 # Patches added in this section will be executed after doctypes are migrated

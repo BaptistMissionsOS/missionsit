@@ -21,15 +21,15 @@ def _seed_partnership_stages():
 		{"stage_name": "Lapsed", "stage_order": 5, "color": "#dc3545", "probability": 0, "is_active": 1},
 	]
 	for s in stages:
-		if not frappe.db.exists("Partnership Stage", s["stage_name"]):
-			frappe.get_doc({"doctype": "Partnership Stage", **s}).insert(ignore_permissions=True)
+		if not frappe.db.exists("Mit Deputation Partnership Stage", s["stage_name"]):
+			frappe.get_doc({"doctype": "Mit Deputation Partnership Stage", **s}).insert(ignore_permissions=True)
 
 
 def _seed_default_fund():
-	if not frappe.db.exists("Fund", "General Support"):
+	if not frappe.db.exists("Mit Finances Fund", "General Support"):
 		frappe.get_doc(
 			{
-				"doctype": "Fund",
+				"doctype": "Mit Finances Fund",
 				"fund_name": "General Support",
 				"is_default": 1,
 				"status": "Active",

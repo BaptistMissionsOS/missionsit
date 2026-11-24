@@ -41,7 +41,7 @@
    "fieldname": "missionary",
    "fieldtype": "Link",
    "label": "Missionary",
-   "options": "Missions Missionary",
+   "options": "Mit People Missionary",
    "in_standard_filter": 1
   },
   {
