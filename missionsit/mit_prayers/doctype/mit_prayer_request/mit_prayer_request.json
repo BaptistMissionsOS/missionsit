@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-11-23 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "request_title",
+  "missionary",
+  "column_break_1",
+  "category",
+  "status",
+  "section_break_2",
+  "request_text",
+  "section_break_3",
+  "date_requested",
+  "date_answered",
+  "column_break_2",
+  "prayer_team",
+  "share_with_prayer_team"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "PREQ-.YYYY.-.#####"
+  },
+  {
+   "fieldname": "request_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Request Title",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "missionary",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Missionary",
+   "options": "Mit People Missionary",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Category",
+   "options": "Field Work\nFamily\nHealth\nSupport\nTravel\nPersonal\nOther"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nAnswered\nClosed"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "request_text",
+   "fieldtype": "Text",
+   "label": "Request"
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date_requested",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date Requested"
+  },
+  {
+   "fieldname": "date_answered",
+   "fieldtype": "Date",
+   "label": "Date Answered"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "prayer_team",
+   "fieldtype": "Link",
+   "label": "Prayer Team",
+   "options": "Mit Prayer Team"
+  },
+  {
+   "default": "1",
+   "fieldname": "share_with_prayer_team",
+   "fieldtype": "Check",
+   "label": "Share with Prayer Team"
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-23 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Mit Prayers",
+ "name": "Mit Prayer Request",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "if_owner": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Missionary",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Organization Admin",
+   "share": 0,
+   "write": 0
+  }
+ ],
+ "search_fields": "request_title,missionary,category",
+ "sort_field": "date_requested",
+ "sort_order": "DESC",
+ "title_field": "request_title",
+ "track_changes": 1
+}

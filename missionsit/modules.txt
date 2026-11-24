@@ -1,23 +1,15 @@
-Missions Organization
-Missions Missionary
-Missions Supporter
-Missions Partnership Stage
-Missions Supporter Group
-Missions Supporter Referral
-Missions Fund
-Missions Pledge
-Missions Donation
-Missions Ministry Task
-Missions Interaction
-Missions Prayer Letter
-Missions Church
-Missions Church Visit
-Missions Donation Page
-Missions Recurring Donation
-Missions Trip
-Missions Trip Participant
-Missions Trip Application
-Missions Campaign
-Missions Email Campaign
-Missions Payments
-Missions Summary
+Mit Correspondence
+Mit Deputation
+Mit Directory
+Mit Finances
+Mit Furlough
+Mit Help
+Mit Marketplace
+Mit Ministries
+Mit People
+Mit Prayers
+Mit Setup
+Mit Summary
+Mit Tentmaker
+Mit Trip
+Mit Website

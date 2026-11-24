@@ -1,0 +1,69 @@
+{
+ "charts": [
+  {
+   "chart_name": "Donations by Fund",
+   "label": "Donations by Fund"
+  },
+  {
+   "chart_name": "Trips by Status",
+   "label": "Trips by Status"
+  },
+  {
+   "chart_name": "Pledges by Status",
+   "label": "Pledges by Status"
+  }
+ ],
+ "content": "[{\"id\":\"introVerse\",\"type\":\"paragraph\",\"data\":{\"text\":\"<i>\\\"And whatsoever ye do, do it heartily, as to the Lord, and not unto men\\\"</i> (Colossians 3:23)\",\"col\":12}},{\"id\":\"ncSupporters\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Supporters\",\"col\":4}},{\"id\":\"ncDonations\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Donations\",\"col\":4}},{\"id\":\"ncActiveTrips\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Trips\",\"col\":4}},{\"id\":\"ncOpenTasks\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Open Tasks\",\"col\":4}},{\"id\":\"ncPendingApps\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Pending Applications\",\"col\":4}},{\"id\":\"ncRecurring\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Recurring Donations\",\"col\":4}},{\"id\":\"chartDonationsByFund\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Donations by Fund\",\"col\":6}},{\"id\":\"chartTripsByStatus\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Trips by Status\",\"col\":6}},{\"id\":\"chartPledgesByStatus\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Pledges by Status\",\"col\":12}}]",
+ "creation": "2026-11-12 00:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "chart-column",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Summary",
+ "links": [],
+ "modified": "2026-11-23 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Mit Summary",
+ "name": "Summary",
+ "number_cards": [
+  {
+   "label": "Supporters",
+   "number_card_name": "Supporters"
+  },
+  {
+   "label": "Donations",
+   "number_card_name": "Donations"
+  },
+  {
+   "label": "Active Trips",
+   "number_card_name": "Active Trips"
+  },
+  {
+   "label": "Open Tasks",
+   "number_card_name": "Open Tasks"
+  },
+  {
+   "label": "Pending Applications",
+   "number_card_name": "Pending Applications"
+  },
+  {
+   "label": "Active Recurring Donations",
+   "number_card_name": "Active Recurring Donations"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Summary",
+ "type": "Workspace"
+}
