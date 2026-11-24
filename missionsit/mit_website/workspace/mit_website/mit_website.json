@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"websiteIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Public pages your supporters see \\u2014 donation forms, trip applications, themed campaigns, missionary profiles, and the member portal.\", \"col\": 12}}, {\"id\": \"scDonationPage\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Donation Page\", \"col\": 4}}, {\"id\": \"scCampaign\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Campaign\", \"col\": 4}}, {\"id\": \"scProfilePage\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Missionary Profile Page\", \"col\": 4}}, {\"id\": \"scPortal\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Portal\", \"col\": 6}}, {\"id\": \"scWebFormSettings\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Web Form Settings\", \"col\": 6}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Mit Website",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Website",
  "name": "Mit Website",
@@ -24,7 +24,40 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 13.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Donation Page",
+   "link_to": "Mit Finances Donation Page",
+   "type": "DocType",
+   "color": "Green"
+  },
+  {
+   "doc_view": "List",
+   "label": "Campaign",
+   "link_to": "Mit Website Campaign",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "Missionary Profile Page",
+   "link_to": "Mit Website Missionary Profile Page",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Portal",
+   "link_to": "Mit Website Portal",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Web Form Settings",
+   "link_to": "Mit Website Web Form Settings",
+   "type": "DocType"
+  }
+ ],
  "standard": 1,
  "title": "Mit Website",
  "type": "Workspace"

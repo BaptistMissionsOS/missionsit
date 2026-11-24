@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"furloughIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Plan your time home: start and end dates, home base, additional support target and goals.\", \"col\": 12}}, {\"id\": \"scFurlough\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Furlough\", \"col\": 12}}, {\"id\": \"qlCurrentFurlough\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Current & Upcoming\", \"col\": 12}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Furlough",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Furlough",
  "name": "Furlough",
@@ -21,10 +21,23 @@
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "Mit Furlough",
+   "label": "Current & Upcoming"
+  }
+ ],
  "roles": [],
  "sequence_id": 8.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Furlough",
+   "link_to": "Mit Furlough",
+   "type": "DocType",
+   "color": "Blue"
+  }
+ ],
  "standard": 1,
  "title": "Furlough",
  "type": "Workspace"
