@@ -2,7 +2,7 @@
 
 # MissionsIT
 
-**A fully open-source CRM and fundraising app for missionaries and sending organizations, built on the [Frappe Framework](https://frappe.io/framework).**
+**A fully open-source missions management system, built on the [Frappe Framework](https://frappe.io/framework).**
 
 [![GitHub License](https://img.shields.io/github/license/BaptistMissionsOS/missionsit)](https://github.com/BaptistMissionsOS/missionsit?tab=readme-ov-file#-license-mit-0)
 ![GitHub contributors](https://img.shields.io/github/contributors/BaptistMissionsOS/missionsit)
@@ -17,67 +17,66 @@
 
 ## ✨ Features
 
-One missionary manages their supporters from first contact through active partnership: tracking partnership stages, recording pledges and donations, creating follow-up tasks, logging interactions, sending prayer letters, running online donation pages, recruiting for short-term trips, and visiting supporting churches.
-
-Every DocType is namespaced under its module (`Mit <Module> <Name>`) so no DocType or module name can shadow another app.
-
-### People & giving
-
-- **Mit People Organization** — Sending churches, agencies and mission boards
-- **Mit People Missionary** — The central profile for each missionary
-- **Mit People Supporter** — Individuals and families who partner with a missionary
-- **Mit Deputation Partnership Stage** — Funnel stages (Contact, Appointment, Presentation, Partner, Lapsed)
-- **Mit People Supporter Group** — Named lists of supporters for targeted communication
-- **Mit People Supporter Referral** — Tracks who referred a supporter to the missionary
-- **Mit Finances Fund** — Named buckets for donations (General Support, Project funds)
-- **Mit Finances Pledge** — A commitment to give at a set amount and frequency
-- **Mit Finances Donation** — A recorded gift from a supporter
-- **Mit Finances Recurring Donation** — A scheduled gift that renews on a frequency
+### Supporters & giving
+- One missionary manages supporters from first contact through active partnership, moving them through a partnership funnel (Contact, Appointment, Presentation, Partner, Lapsed) that each sending organization can customize
+- Pledges track each supporter's commitment and frequency, and the pledge progress chart compares pledged amounts against gifts received
+- Donations allocate to named funds (General Support, project funds), roll up to the missionary, and credit any linked pledge automatically
+- Recurring donations advance on their due date through a daily scheduler and record the gateway subscription when they renew
+- Automatic thank-you task on every donation, linked back to the supporter, so no gift goes unacknowledged
+- Supporter groups for targeted outreach (year-end appeal, prayer team, major donors), and a supporter referral trail so a missionary can thank the person who introduced each new partner
+- Birthday, partnership anniversary and lapsed-donor (no gift in 90 days) ministry tasks created each morning so follow-up stays on the calendar
+- Interactions timeline on each supporter — calls, emails, meetings, gifts — so anyone looking at the record sees the whole relationship
 
 ### Online giving
-
-- **Mit Finances Donation Page** — A public `/donate/<slug>` page with Stripe checkout
-- **Mit Website Campaign** — A themed giving drive (peer-to-peer, special project, matching)
-- **Mit Correspondence Email Campaign** — A supporter-group email broadcast with scheduled send
+- Stripe checkout donation pages with a fund picker and an optional recurring-gift toggle
+- Payment Request paid creates the Donation (and the Recurring Donation on renewals) itself, with the gateway subscription id for later changes
+- Themed campaigns (peer-to-peer, special project, matching) with their own goal and running total
+- Publishable missionary profile pages with a headline, photo, field summary and bio
+- A member portal with signups, donations and trip applications that each sending organization can turn on
 
 ### Trips
+- Short-term trip planning: destination, dates, per-person cost and status
+- Public applications flow into the desk; accepting an application promotes the applicant to a Trip Participant automatically
+- Each participant's support-raising progress rolls up from their linked donations, so trip leaders see who is fully funded at a glance
+- Trip expenses tracked per trip
 
-- **Mit Trip** — A short-term missions trip with destination, dates, and cost
-- **Mit Trip Application** — A public application submitted at `/apply/<trip>`
-- **Mit Trip Participant** — An accepted traveler with support-raising progress
+### Deputation & churches
+- Shared Church directory with submissions and verifications, so church profiles are kept up to date by the people who know them
+- Access requests when a missionary wants to use the directory
+- Church visits: scheduled and completed, with the missionary, date, and outcome
+- Deputation schedule: plan a region or itinerary with a target number of churches between two dates
+- Reusable presentations (slides, videos, printed material) attached to visits
 
-### Churches
+### Correspondence
+- Prayer letters written in the desk and sent to supporter groups
+- Email campaigns with a scheduled send date; the daily scheduler sends each campaign when its date is reached
+- Correspondence log: a single record of every letter, email and message sent, filterable per supporter
+- Ministry tasks (thank-you notes, calls, visits, follow-ups) as a to-do list with due dates and owners
 
-- **Mit Directory Church** — A supporting or prospective church (shared directory)
-- **Mit Deputation Church Visit** — A scheduled or completed visit to a church
+### Prayer
+- Prayer requests from a missionary, with a category and a status so answered prayer can be marked
+- Prayer teams built from supporters; a request can be shared with the team or kept private
+- Prayer updates post progress and answers to the people praying
 
-### Activity
+### Missionary life
+- Furlough tracking: start and end dates, home base, additional monthly support target, and goals for the time home
+- Tentmaker jobs: part-time or full-time work a missionary takes abroad, with employer, country, hours, and whether the job provides a visa
+- Business contacts and skills/services for tentmaker missionaries
+- Ministry projects and activities so a missionary can report what the funds are accomplishing on the field, with linked ministry partners
 
-- **Mit Correspondence Ministry Task** — Action items: thank-you notes, calls, visits, follow-ups
-- **Mit People Interaction** — A logged touchpoint: call, email, meeting, gift
-- **Mit Correspondence Prayer Letter** — Newsletters and update letters sent to supporters
+### Marketplace
+- Listings posted by churches, organizations and missionaries — ministry opportunities, resources, short-term housing — with map location and host church
 
-### Public pages
-
-- `/donate/<slug>` — Public donation form, posts to Stripe checkout
-- `/apply/<trip>` — Public trip application form
+### Finances
+- Funds, pledges, donations and recurring donations tied together so a pledge's balance updates whenever a gift comes in
+- Expense tracking by category and financial period
+- Budgets and a general ledger view for the missionary's own bookkeeping
 
 ### Automatic actions
-
-- **Donation after insert** creates a thank-you Ministry Task, links it to the Supporter, and updates any linked Pledge balance.
-- **Trip Application set to Accepted** promotes the applicant to a Trip Participant.
-- **Daily scheduler** advances Recurring Donations whose `next_payment_date` is due, and creates Ministry Tasks for upcoming birthdays, partnership anniversaries, and lapsed donors (no gift in the last 90 days).
-- **Email Campaign set to Scheduled** sends when its `scheduled_date` is reached.
-- **Payment Request paid** creates a Donation and, if recurring, a Recurring Donation record with the gateway subscription id.
-
-### Roles
-
-| Role | Access |
-|---|---|
-| **System Manager** | Full access to all records |
-| **Missionary** | Read and write only the records linked to their own Mit People Missionary record |
-| **Organization Admin** | Read and write Mit People Missionary and Mit Finances Donation records inside the organizations they administer |
-| **Trip Leader** | Read and write Mit Trip, Mit Trip Application, and Mit Trip Participant records |
+- A donation creates a thank-you task and credits any linked pledge
+- An accepted trip application promotes the applicant to a trip participant
+- A paid payment request records a donation (and a recurring donation on renewals) by itself
+- The daily scheduler advances recurring donations that are due, sends scheduled email campaigns, and creates follow-up tasks for birthdays, partnership anniversaries and lapsed donors
 
 ## 📥 Installing MissionsIT
 
