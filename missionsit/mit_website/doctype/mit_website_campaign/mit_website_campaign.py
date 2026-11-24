@@ -18,7 +18,7 @@ class MitWebsiteCampaign(Document):
 		"""Sum linked Donations and store on *amount_raised*."""
 		total = (
 			frappe.db.get_value(
-				"Donation",
+				"Mit Finances Donation",
 				{"campaign": self.name},
 				"SUM(amount)",
 			)

@@ -15,7 +15,7 @@ def get_context(context):
 		frappe.local.flags.redirect_location = "/"
 		raise frappe.Redirect
 	page = frappe.db.get_value(
-		"Donation Page",
+		"Mit Finances Donation Page",
 		{"slug": slug, "is_active": 1},
 		["name", "title", "missionary", "fund", "goal_amount", "currency", "description", "thank_you_message", "allow_recurring", "minimum_amount"],
 		as_dict=True,
@@ -24,6 +24,6 @@ def get_context(context):
 		raise frappe.DoesNotExistError(frappe._("Donation page not found."))
 	context.no_cache = 1
 	context.page = page
-	context.missionary_name = frappe.db.get_value("Missions Missionary", page.missionary, "missionary_name")
+	context.missionary_name = frappe.db.get_value("Mit People Missionary", page.missionary, "missionary_name")
 	context.title = page.title
 	return context
