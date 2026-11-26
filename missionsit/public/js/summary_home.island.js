@@ -67,8 +67,106 @@ function greeting(date) {
 	return __("Good evening");
 }
 
+function money(value, currency) {
+	if (currency && window.format_currency) return format_currency(value, currency, 0);
+	return formatNumber(Math.round(value || 0));
+}
+
+const SupportLevel = {
+	props: { support: Object },
+	setup(props) {
+		return () => {
+			const s = props.support;
+			const pct = Math.max(0, s.percent || 0);
+			const promisedPct = s.target ? Math.round(((s.committed + s.promised) / s.target) * 100) : 0;
+			const label = s.who
+				? __("{0}: {1}% supported", [s.who, pct])
+				: s.missionaries > 1
+				? __("{0} missionaries: {1}% supported together", [s.missionaries, pct])
+				: __("{0}% supported", [pct]);
+			return h("div", { class: "ov-support" }, [
+				h("div", { class: "ov-support__line" }, [
+					h("p", { class: "ov-support__label" }, label),
+					h(
+						"p",
+						{ class: "ov-support__amounts" },
+						__("{0} of {1} a month", [money(s.committed, s.currency), money(s.target, s.currency)]),
+					),
+				]),
+				h(
+					"div",
+					{
+						class: "ov-support__track",
+						role: "progressbar",
+						"aria-valuemin": 0,
+						"aria-valuemax": 100,
+						"aria-valuenow": Math.min(pct, 100),
+						"aria-label": label,
+					},
+					[
+						h("span", {
+							class: "ov-support__promised",
+							style: { width: `${Math.min(promisedPct, 100)}%` },
+						}),
+						h("span", { class: "ov-support__fill", style: { width: `${Math.min(pct, 100)}%` } }),
+					],
+				),
+				s.promised
+					? h(
+							"p",
+							{ class: "ov-support__note" },
+							__("Another {0} a month is promised but not yet giving.", [money(s.promised, s.currency)]),
+					  )
+					: null,
+			]);
+		};
+	},
+};
+
+const ComingUp = {
+	props: { items: Array },
+	setup(props) {
+		const fmt = (iso) => {
+			const d = new Date(`${iso}T00:00:00`);
+			const today = new Date();
+			today.setHours(0, 0, 0, 0);
+			const days = Math.round((d - today) / 86400000);
+			if (days === 0) return __("Today");
+			if (days === 1) return __("Tomorrow");
+			return d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+		};
+		return () =>
+			h(
+				"ol",
+				{ class: "ov-coming" },
+				props.items.map((item) =>
+					h(
+						"li",
+						{ key: `${item.doctype}:${item.name}:${item.kind}`, class: "ov-coming__item" },
+						h(
+							"button",
+							{
+								type: "button",
+								class: "ov-coming__button",
+								onClick: () => frappe.set_route("Form", item.doctype, item.name),
+							},
+							[
+								h("time", { class: "ov-coming__date", datetime: item.date }, fmt(item.date)),
+								h("span", { class: "ov-coming__icon", innerHTML: icon(item.icon, "sm") }),
+								h("span", { class: "ov-coming__text" }, [
+									h("span", { class: "ov-coming__title" }, item.title),
+									h("span", { class: "ov-coming__kind" }, __(item.kind)),
+								]),
+							],
+						),
+					),
+				),
+			);
+	},
+};
+
 const Dispatch = {
-	props: { verse: String, waiting: Number },
+	props: { verse: String, waiting: Number, support: Object },
 	setup(props) {
 		const now = new Date();
 		const date = now.toLocaleDateString(undefined, {
@@ -97,6 +195,7 @@ const Dispatch = {
 								: __("{0} things are waiting on you.", [formatNumber(props.waiting)])
 							: __("Nothing is waiting on you today."),
 					),
+					props.support ? h(SupportLevel, { support: props.support }) : null,
 					props.verse
 						? h("blockquote", { class: "ov-dispatch__verse", innerHTML: props.verse })
 						: null,
@@ -110,10 +209,9 @@ const WaitingRow = {
 	setup(props) {
 		return () => {
 			const { item } = props;
-			const clear = !item.count;
 			return h(
 				"li",
-				{ class: ["ov-wait", clear && "ov-wait--clear"] },
+				{ class: "ov-wait" },
 				h(
 					"button",
 					{
@@ -193,6 +291,8 @@ const App = {
 	setup() {
 		const state = reactive({
 			verse: "",
+			support: null,
+			coming_up: [],
 			shortcuts: [],
 			attention: [],
 			cards: [],
@@ -208,6 +308,8 @@ const App = {
 				const data = await frappe.xcall(API, {}, "GET");
 				Object.assign(state, {
 					verse: data.verse || "",
+					support: data.support || null,
+					coming_up: data.coming_up || [],
 					shortcuts: data.shortcuts || [],
 					attention: data.attention || [],
 					cards: data.cards || [],
@@ -227,11 +329,9 @@ const App = {
 		const waiting = computed(() =>
 			state.attention.reduce((sum, item) => sum + (Number(item.count) || 0), 0),
 		);
-		// Work first, then what is all clear, each keeping the order the server gave.
-		const attention = computed(() => [
-			...state.attention.filter((i) => i.count),
-			...state.attention.filter((i) => !i.count),
-		]);
+		// Rows with work keep the order the server gave; the all-clear ones fold into one line.
+		const attention = computed(() => state.attention.filter((i) => i.count));
+		const clear = computed(() => state.attention.filter((i) => !i.count).map((i) => i.label));
 		const web = computed(() => [
 			{ label: __("Donation pages"), value: state.website.donation_pages, doctype: "Mit Finances Donation Page" },
 			{ label: __("Campaigns"), value: state.website.campaigns, doctype: "Mit Website Campaign" },
@@ -251,21 +351,50 @@ const App = {
 				]);
 
 			return h("div", { class: "ov" }, [
-				h(Dispatch, { verse: state.verse, waiting: waiting.value }),
+				h(Dispatch, { verse: state.verse, waiting: waiting.value, support: state.support }),
 
 				h("div", { class: "ov-columns" }, [
-					state.attention.length
-						? h("section", { class: "ov-block ov-block--waiting", "aria-labelledby": "ov-waiting" }, [
-								h("h2", { class: "ov-heading", id: "ov-waiting" }, __("Waiting on you")),
-								h(
-									"ul",
-									{ class: "ov-wait-list" },
-									attention.value.map((item) =>
-										h(WaitingRow, { item, key: `${item.doctype}:${item.label}` }),
-									),
-								),
-						  ])
-						: null,
+					h("div", { class: "ov-main" }, [
+						state.attention.length
+							? h("section", { class: "ov-block", "aria-labelledby": "ov-waiting" }, [
+									h("h2", { class: "ov-heading", id: "ov-waiting" }, __("Waiting on you")),
+									attention.value.length
+										? h(
+												"ul",
+												{ class: "ov-wait-list" },
+												attention.value.map((item) =>
+													h(WaitingRow, { item, key: `${item.doctype}:${item.label}` }),
+												),
+										  )
+										: null,
+									clear.value.length
+										? h("p", { class: "ov-clear" }, [
+												h("span", { class: "ov-clear__mark", innerHTML: icon("check", "sm") }),
+												h(
+													"span",
+													{},
+													__("All clear: {0}.", [
+														clear.value
+															.map((label, i) => (i ? label.toLowerCase() : label))
+															.join(", "),
+													]),
+												),
+										  ])
+										: null,
+							  ])
+							: null,
+
+						h("section", { class: "ov-block", "aria-labelledby": "ov-coming" }, [
+							h("h2", { class: "ov-heading", id: "ov-coming" }, __("Coming up")),
+							state.coming_up.length
+								? h(ComingUp, { items: state.coming_up })
+								: h(
+										"p",
+										{ class: "ov-quiet" },
+										__("Nothing on the calendar for the next two weeks."),
+								  ),
+						]),
+					]),
 
 					h("section", { class: "ov-block ov-block--ledger", "aria-labelledby": "ov-ledger" }, [
 						h("h2", { class: "ov-heading", id: "ov-ledger" }, __("Support ledger")),

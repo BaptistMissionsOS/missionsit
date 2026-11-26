@@ -106,6 +106,65 @@
 	color: var(--ov-muted);
 }
 
+/* Support level: one line inside the dispatch. Promised support shows as a paler run past the fill. */
+.ov-support {
+	display: grid;
+	gap: 8px;
+	max-width: 640px;
+	margin-top: 4px;
+}
+
+.ov-support__line {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 2px 16px;
+}
+
+.ov-support__label {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--ov-heading);
+}
+
+.ov-support__amounts {
+	margin: 0;
+	font-size: 14px;
+	font-variant-numeric: tabular-nums;
+	color: var(--ov-muted);
+}
+
+.ov-support__track {
+	position: relative;
+	height: 10px;
+	border-radius: 999px;
+	background: var(--ov-hover);
+	overflow: hidden;
+}
+
+.ov-support__promised,
+.ov-support__fill {
+	position: absolute;
+	inset: 0 auto 0 0;
+	border-radius: inherit;
+}
+
+.ov-support__promised {
+	background: color-mix(in srgb, var(--ov-blue) 28%, transparent);
+}
+
+.ov-support__fill {
+	background: var(--ov-blue);
+}
+
+.ov-support__note {
+	margin: 0;
+	font-size: 13px;
+	color: var(--ov-muted);
+}
+
 @keyframes ov-arrive {
 	from {
 		opacity: 0;
@@ -198,16 +257,93 @@
 	display: inline-flex;
 }
 
-/* All clear: the row steps back so the eye lands on actual work. */
-.ov-wait--clear .ov-wait__count {
-	color: var(--ov-sage);
-	font-weight: 600;
-	font-size: 22px;
+.ov-clear {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+	margin: 14px 0 0;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--ov-muted);
 }
 
-.ov-wait--clear .ov-wait__label {
+.ov-clear__mark {
+	display: inline-flex;
+	color: var(--ov-sage);
+	padding-top: 2px;
+}
+
+.ov-quiet {
+	margin: 0;
+	font-size: 14px;
 	color: var(--ov-muted);
-	font-weight: 400;
+}
+
+/* --- Coming up ---------------------------------------------------------------------- */
+
+.ov-main {
+	display: grid;
+	gap: 40px;
+}
+
+.ov-coming {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--ov-line);
+}
+
+.ov-coming__item {
+	border-bottom: 1px solid var(--ov-line);
+}
+
+.ov-coming__button {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 96px 20px minmax(0, 1fr);
+	align-items: center;
+	gap: 12px;
+	padding: 11px 8px;
+	border: 0;
+	background: none;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
+	border-radius: 6px;
+}
+
+.ov-coming__button:hover {
+	background: var(--ov-hover);
+}
+
+.ov-coming__date {
+	font-size: 14px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	color: var(--ov-blue);
+}
+
+.ov-coming__icon {
+	display: inline-flex;
+	color: var(--ov-muted);
+}
+
+.ov-coming__text {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 2px 10px;
+	min-width: 0;
+}
+
+.ov-coming__title {
+	font-size: 15px;
+	font-weight: 500;
+}
+
+.ov-coming__kind {
+	font-size: 13px;
+	color: var(--ov-muted);
 }
 
 /* --- Support ledger ------------------------------------------------------------------ */
@@ -392,5 +528,10 @@
 
 	.ov-wait__count {
 		font-size: 24px;
+	}
+
+	.ov-coming__button {
+		grid-template-columns: 76px 18px minmax(0, 1fr);
+		gap: 10px;
 	}
 }
