@@ -4,5 +4,5 @@
 from frappe.model.document import Document
 
 
-class MitHelpFAQ(Document):
+class MitHelpFaq(Document):
 	pass
