@@ -2,6 +2,7 @@
 [pre_model_sync]
 missionsit.patches.reorganize_modules
 missionsit.patches.rename_to_mit
+missionsit.patches.rename_help_faq_doctype
 
 
 # Patches added in this section will be executed after doctypes are migrated
