@@ -3,7 +3,7 @@
 
 // Summary Home: the desk page that hosts a Vue3 + frappe-ui island with the dashboard.
 
-frappe.pages["summary-home"].on_page_load = function (wrapper) {
+frappe.pages["summary"].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: __("Summary"),
@@ -35,6 +35,6 @@ frappe.pages["summary-home"].on_page_load = function (wrapper) {
 		});
 };
 
-frappe.pages["summary-home"].on_page_show = function (wrapper) {
+frappe.pages["summary"].on_page_show = function (wrapper) {
 	wrapper.summary_island?.reload?.();
 };
