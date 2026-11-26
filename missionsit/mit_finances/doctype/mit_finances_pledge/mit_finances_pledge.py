@@ -30,7 +30,7 @@ def get_permission_query_conditions(user: str) -> str:
 	missionary = frappe.db.get_value("Mit People Missionary", {"user": user}, "name")
 	if not missionary:
 		return "1=0"
-	return f"`tabPledge`.`missionary` = {frappe.db.escape(missionary)}"
+	return f"`tabMit Finances Pledge`.`missionary` = {frappe.db.escape(missionary)}"
 
 
 def has_permission(doc, user: str, permission_type: str = "read") -> bool:

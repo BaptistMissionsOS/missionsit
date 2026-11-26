@@ -100,7 +100,7 @@ def get_permission_query_conditions(user):
 	if not own:
 		return "1=0"
 	quoted = ", ".join(frappe.db.escape(name) for name in own)
-	return f"`tabChurch`.`name` in ({quoted})"
+	return f"`tabMit Directory Church`.`name` in ({quoted})"
 
 
 def has_permission(doc, user=None, permission_type=None):
