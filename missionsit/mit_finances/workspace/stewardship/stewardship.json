@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"financesIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Donations, pledges and recurring gifts rolled up into funds, with expenses and budgets alongside.\", \"col\": 12}}, {\"id\": \"scDonation\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Donation\", \"col\": 3}}, {\"id\": \"scPledge\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Pledge\", \"col\": 3}}, {\"id\": \"scRecurring\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Recurring Donation\", \"col\": 3}}, {\"id\": \"scFund\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Fund\", \"col\": 3}}, {\"id\": \"scExpense\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Expense\", \"col\": 6}}, {\"id\": \"scDonationPage\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Donation Page\", \"col\": 6}}, {\"id\": \"qlRecentDonations\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Recent Donations\", \"col\": 12}}]",
+ "creation": "2026-11-12 00:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "circle-dollar-sign",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Stewardship",
+ "links": [],
+ "modified": "2026-11-27 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Mit Finances",
+ "name": "Stewardship",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Mit Finances Donation",
+   "label": "Recent Donations"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 12.0,
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Donation",
+   "link_to": "Mit Finances Donation",
+   "type": "DocType",
+   "color": "Green"
+  },
+  {
+   "doc_view": "List",
+   "label": "Pledge",
+   "link_to": "Mit Finances Pledge",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "Recurring Donation",
+   "link_to": "Mit Finances Recurring Donation",
+   "type": "DocType",
+   "color": "Cyan"
+  },
+  {
+   "doc_view": "List",
+   "label": "Fund",
+   "link_to": "Mit Finances Fund",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Expense",
+   "link_to": "Mit Finances Expense",
+   "type": "DocType",
+   "color": "Red"
+  },
+  {
+   "doc_view": "List",
+   "label": "Donation Page",
+   "link_to": "Mit Finances Donation Page",
+   "type": "DocType"
+  }
+ ],
+ "standard": 1,
+ "title": "Stewardship",
+ "type": "Workspace"
+}

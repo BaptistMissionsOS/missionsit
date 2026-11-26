@@ -1,0 +1,62 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"prayersIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"<i>\\\"The effectual fervent prayer of a righteous man availeth much\\\"</i> (James 5:16)\", \"col\": 12}}, {\"id\": \"scRequest\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Prayer Request\", \"col\": 4}}, {\"id\": \"scTeam\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Prayer Team\", \"col\": 4}}, {\"id\": \"scUpdate\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Prayer Update\", \"col\": 4}}, {\"id\": \"qlOpenRequests\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Open Requests\", \"col\": 6}}, {\"id\": \"qlRecentUpdates\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Recent Updates\", \"col\": 6}}]",
+ "creation": "2026-11-12 00:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "hands-praying",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Prayer Wall",
+ "links": [],
+ "modified": "2026-11-27 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Mit Prayers",
+ "name": "Prayer Wall",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Mit Prayer Request",
+   "label": "Open Requests",
+   "quick_list_filter": "[[\"status\", \"=\", \"Active\"]]"
+  },
+  {
+   "document_type": "Mit Prayer Update",
+   "label": "Recent Updates"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 4.0,
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Prayer Request",
+   "link_to": "Mit Prayer Request",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "Prayer Team",
+   "link_to": "Mit Prayer Team",
+   "type": "DocType",
+   "color": "Green"
+  },
+  {
+   "doc_view": "List",
+   "label": "Prayer Update",
+   "link_to": "Mit Prayer Update",
+   "type": "DocType"
+  }
+ ],
+ "standard": 1,
+ "title": "Prayer Wall",
+ "type": "Workspace"
+}
