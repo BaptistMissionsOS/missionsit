@@ -16,7 +16,7 @@ import {
 	watch,
 } from "https://esm.sh/vue@3.5.13";
 
-const API = "missionsit.mit_summary.page.summary_home.summary_home.get_dashboard";
+const API = "missionsit.mit_summary.page.summary.summary.get_dashboard";
 
 const CHART_COLORS = [
 	"#2490ef",

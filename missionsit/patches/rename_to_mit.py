@@ -20,7 +20,7 @@ DOCTYPE_RENAMES = {
     "Email": "Mit Correspondence Email",
     "Email Campaign": "Mit Correspondence Email Campaign",
     "Expense": "Mit Finances Expense",
-    "FAQ": "Mit Help FAQ",
+    "FAQ": "Mit Help Faq",
     "Financial Period": "Mit Finances Financial Period",
     "Fund": "Mit Finances Fund",
     "Furlough": "Mit Furlough",

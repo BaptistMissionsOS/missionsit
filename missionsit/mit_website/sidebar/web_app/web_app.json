@@ -20,7 +20,7 @@
    "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link",
-   "link_to": "Mit Website"
+   "link_to": "Web App"
   },
   {
    "added": 0,
@@ -87,11 +87,11 @@
    "type": "Link"
   }
  ],
- "modified": "2026-11-23 23:00:00.000000",
+ "modified": "2026-11-26 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Website",
- "name": "Mit Website",
+ "name": "Web App",
  "owner": "Administrator",
  "standard": 1,
- "title": "Mit Website"
+ "title": "Web App"
 }
