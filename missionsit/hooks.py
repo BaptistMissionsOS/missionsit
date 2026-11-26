@@ -13,7 +13,7 @@ add_to_apps_screen = [
 		"name": "missionsit",
 		"logo": "/assets/frappe/images/frappe-framework-logo.svg",
 		"title": "MissionsIT",
-		"route": "/app/summary-home",
+		"route": "/desk/summary",
 	}
 ]
 
