@@ -14,6 +14,8 @@ def get_permission_query_conditions(user: str) -> str:
 	"""Limit Missionary role users to prayer letters for their own missionary."""
 	import frappe
 
+	if "System Manager" in frappe.get_roles(user):
+		return ""
 	if "Missionary" not in frappe.get_roles(user):
 		return ""
 	missionary = frappe.db.get_value("Mit People Missionary", {"user": user}, "name")
