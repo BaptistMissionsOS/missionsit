@@ -59,13 +59,6 @@ ATTENTION = [
 		"indigo",
 	),
 	("Pledges Promised", "Mit Finances Pledge", {"status": "Promised"}, "handshake", "emerald"),
-	(
-		"Active Recurring Gifts",
-		"Mit Finances Recurring Donation",
-		{"status": "Active"},
-		"repeat",
-		"sky",
-	),
 ]
 
 
@@ -84,7 +77,7 @@ def get_dashboard() -> dict:
 
 
 def get_shortcuts() -> list[dict]:
-	"""One shortcut per visible dock entry (other than Summary itself), so the home
+	"""One shortcut per visible dock entry (other than Overview itself), so the home
 	reaches every module in one click. Tones cycle for visual variety."""
 	if not frappe.db.exists("Dock", "missionsit"):
 		return []
@@ -93,7 +86,7 @@ def get_shortcuts() -> list[dict]:
 	for item in dock.items:
 		if item.link_type != "Sidebar" or item.hidden:
 			continue
-		if item.link_to == "Summary":
+		if item.link_to == "Overview":
 			continue
 		tone = SHORTCUT_TONES[len(tiles) % len(SHORTCUT_TONES)]
 		tiles.append(
