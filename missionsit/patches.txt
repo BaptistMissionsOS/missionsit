@@ -10,3 +10,4 @@ missionsit.patches.rename_help_faq_doctype
 missionsit.patches.summary_page_at_module_root
 missionsit.patches.reattach_module_sidebars
 missionsit.patches.rename_website_to_web_app
+missionsit.patches.rename_nav_to_unique_names

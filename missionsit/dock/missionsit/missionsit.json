@@ -9,17 +9,17 @@
    "added": 0,
    "hidden": 0,
    "icon": "chart-column",
-   "link_to": "Summary",
+   "link_to": "Overview",
    "link_type": "Sidebar",
-   "title": "Summary"
+   "title": "Overview"
   },
   {
    "added": 0,
    "hidden": 0,
    "icon": "users",
-   "link_to": "People",
+   "link_to": "Peoples",
    "link_type": "Sidebar",
-   "title": "People"
+   "title": "Peoples"
   },
   {
    "added": 0,
@@ -33,9 +33,9 @@
    "added": 0,
    "hidden": 0,
    "icon": "hand-heart",
-   "link_to": "Prayers",
+   "link_to": "Prayer Wall",
    "link_type": "Sidebar",
-   "title": "Prayers"
+   "title": "Prayer Wall"
   },
   {
    "added": 0,
@@ -89,17 +89,17 @@
    "added": 0,
    "hidden": 0,
    "icon": "heart-handshake",
-   "link_to": "Ministries",
+   "link_to": "Outreach",
    "link_type": "Sidebar",
-   "title": "Ministries"
+   "title": "Outreach"
   },
   {
    "added": 0,
    "hidden": 0,
    "icon": "circle-dollar-sign",
-   "link_to": "Finances",
+   "link_to": "Stewardship",
    "link_type": "Sidebar",
-   "title": "Finances"
+   "title": "Stewardship"
   },
   {
    "added": 0,
@@ -113,20 +113,20 @@
    "added": 0,
    "hidden": 0,
    "icon": "life-buoy",
-   "link_to": "Help",
+   "link_to": "Helps",
    "link_type": "Sidebar",
-   "title": "Help"
+   "title": "Helps"
   },
   {
    "added": 0,
    "hidden": 0,
    "icon": "settings",
-   "link_to": "Settings",
+   "link_to": "Configs",
    "link_type": "Sidebar",
-   "title": "Settings"
+   "title": "Configs"
   }
  ],
- "modified": "2026-11-26 12:00:00.000000",
+ "modified": "2026-11-27 12:00:00.000000",
  "modified_by": "Administrator",
  "name": "missionsit",
  "owner": "Administrator",
