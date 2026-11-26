@@ -11,12 +11,12 @@
  "idx": 0,
  "indicator_color": "",
  "is_hidden": 0,
- "label": "Mit Website",
+ "label": "Web App",
  "links": [],
- "modified": "2026-11-24 00:00:00.000000",
+ "modified": "2026-11-26 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Website",
- "name": "Mit Website",
+ "name": "Web App",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -59,6 +59,6 @@
   }
  ],
  "standard": 1,
- "title": "Mit Website",
+ "title": "Web App",
  "type": "Workspace"
 }
