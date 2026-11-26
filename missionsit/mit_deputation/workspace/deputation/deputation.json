@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"deputationIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Plan an itinerary, schedule visits, and reuse the presentations you take with you.\", \"col\": 12}}, {\"id\": \"scVisit\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Church Visit\", \"col\": 4}}, {\"id\": \"scSchedule\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Deputation Schedule\", \"col\": 4}}, {\"id\": \"scPresentation\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Presentation\", \"col\": 4}}, {\"id\": \"qlUpcomingVisits\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Upcoming Visits\", \"col\": 12}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Deputation",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Deputation",
  "name": "Deputation",
@@ -21,10 +21,37 @@
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "Mit Deputation Church Visit",
+   "label": "Upcoming Visits",
+   "quick_list_filter": "[[\"status\", \"=\", \"Planned\"]]"
+  }
+ ],
  "roles": [],
  "sequence_id": 7.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Church Visit",
+   "link_to": "Mit Deputation Church Visit",
+   "type": "DocType",
+   "color": "Blue"
+  },
+  {
+   "doc_view": "List",
+   "label": "Deputation Schedule",
+   "link_to": "Mit Deputation Schedule",
+   "type": "DocType",
+   "color": "Green"
+  },
+  {
+   "doc_view": "List",
+   "label": "Presentation",
+   "link_to": "Mit Deputation Presentation",
+   "type": "DocType"
+  }
+ ],
  "standard": 1,
  "title": "Deputation",
  "type": "Workspace"

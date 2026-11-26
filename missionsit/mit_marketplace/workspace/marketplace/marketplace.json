@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[]",
+ "content": "[{\"id\": \"marketplaceIntro\", \"type\": \"paragraph\", \"data\": {\"text\": \"Ministry opportunities, resources and short-term housing posted by churches, agencies and missionaries. Active listings also appear on the public map at <a href=\\\"/map\\\" target=\\\"_blank\\\">/map</a>.\", \"col\": 12}}, {\"id\": \"scListing\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Listing\", \"col\": 12}}, {\"id\": \"qlRecentListings\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Recent Listings\", \"col\": 12}}]",
  "creation": "2026-11-12 00:00:00.000000",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Marketplace",
  "links": [],
- "modified": "2026-11-23 12:00:00.000000",
+ "modified": "2026-11-24 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Marketplace",
  "name": "Marketplace",
@@ -21,10 +21,23 @@
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "Mit Marketplace Listing",
+   "label": "Recent Listings"
+  }
+ ],
  "roles": [],
  "sequence_id": 10.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Listing",
+   "link_to": "Mit Marketplace Listing",
+   "type": "DocType",
+   "color": "Blue"
+  }
+ ],
  "standard": 1,
  "title": "Marketplace",
  "type": "Workspace"
