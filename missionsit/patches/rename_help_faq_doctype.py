@@ -19,5 +19,5 @@ def execute():
 	if frappe.db.get_value("DocType", old, "name") != old:
 		return
 
-	frappe.rename_doc("DocType", old, new, force=True, ignore_permissions=True)
+	frappe.rename_doc("DocType", old, new, force=True, show_alert=False)
 	frappe.db.commit()
