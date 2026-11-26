@@ -28,7 +28,7 @@ def execute():
 		import_file_by_path(os.path.join(app_path, *path), force=True, reset_permissions=True)
 
 	if frappe.db.exists("Desktop Icon", "Mit Website") and not frappe.db.exists("Desktop Icon", "Web App"):
-		frappe.rename_doc("Desktop Icon", "Mit Website", "Web App", force=True, ignore_permissions=True)
+		frappe.rename_doc("Desktop Icon", "Mit Website", "Web App", force=True, show_alert=False)
 	if frappe.db.exists("Desktop Icon", "Web App"):
 		frappe.db.set_value(
 			"Desktop Icon", "Web App", {"label": "Web App", "link_to": "Web App"}, update_modified=False
