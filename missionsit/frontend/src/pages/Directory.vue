@@ -2,6 +2,7 @@
      and is licensed under MIT No Attribution (MIT-0). -->
 <script setup>
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import ChurchMap from '@/components/ChurchMap.vue'
 import ChurchSubmit from '@/components/ChurchSubmit.vue'
 import { directory, loadDirectory } from '@/data'
@@ -9,6 +10,8 @@ import { directory, loadDirectory } from '@/data'
 loadDirectory()
 
 const churches = computed(() => directory.data?.churches || [])
+// ?clusters=off draws plain dots, for checking the map without clustering.
+const clustered = useRoute().query.clusters !== 'off'
 </script>
 
 <template>
@@ -21,7 +24,7 @@ const churches = computed(() => directory.data?.churches || [])
       {{ churches.length === 1 ? '1 church on the map' : `${churches.length.toLocaleString()} churches on the map` }}
     </p>
 
-    <ChurchMap class="mt-8" :churches="churches" height="min(32rem, 70vh)" />
+    <ChurchMap class="mt-8" :churches="churches" :clustered="clustered" height="min(32rem, 70vh)" />
 
     <ChurchSubmit class="mt-12" />
   </div>

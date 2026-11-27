@@ -15,6 +15,8 @@ const props = defineProps({
   churches: { type: Array, default: () => [] },
   height: { type: String, default: '28rem' },
   interactive: { type: Boolean, default: true },
+  // Plain dots instead of clusters: /missions/directory?clusters=off, for comparing the two.
+  clustered: { type: Boolean, default: true },
 })
 
 const el = ref(null)
@@ -38,6 +40,23 @@ function clusterIcon(cluster) {
 function draw() {
   if (!map) return
   clusters?.remove()
+  if (!props.clustered) {
+    // Every church as a dot on one canvas, which keeps seventeen thousand of them quick.
+    const renderer = L.canvas({ padding: 0.5 })
+    clusters = L.layerGroup(
+      props.churches.map((c) =>
+        L.circleMarker([c.lat, c.lng], {
+          renderer,
+          radius: 4,
+          weight: 1,
+          color: '#FFFFFF',
+          fillColor: '#2D4E9C',
+          fillOpacity: 1,
+        }).bindTooltip(c.name, { direction: 'top', offset: [0, -4] }),
+      ),
+    ).addTo(map)
+    return
+  }
   clusters = L.markerClusterGroup({
     chunkedLoading: true,
     showCoverageOnHover: false,
