@@ -105,12 +105,88 @@ def get_dashboard() -> dict:
 		"coming_up": coming_up,
 		# Only looked for when the fortnight is empty, so the page still says what is next.
 		"coming_later": [] if coming_up else get_coming_up(days=LATER_DAYS, limit=3),
+		"prayers": get_prayers(),
 		"shortcuts": get_shortcuts(),
 		"attention": get_attention(),
 		"cards": [card_payload(name) for name in CARDS if frappe.db.exists("Number Card", name)],
 		"trends": TRENDS_MENU,
 		"website": get_website(),
 	}
+
+
+PRAYERS_SHOWN = 6
+ANSWERED_WINDOW_DAYS = 90
+
+
+def get_prayers() -> dict:
+	"""Active prayer requests, newest first, and those answered in the last ninety days, most
+	recent first. Each carries how long it has been, or was, in prayer."""
+	today = frappe.utils.getdate()
+	fields = [
+		"name",
+		"request_title",
+		"missionary",
+		"category",
+		"request_text",
+		"date_requested",
+		"date_answered",
+		"creation",
+	]
+	active = _list(
+		"Mit Prayer Request", {"status": "Active"}, fields, order_by="date_requested desc, creation desc"
+	)
+	answered = _list(
+		"Mit Prayer Request",
+		{
+			"status": "Answered",
+			"date_answered": [">=", frappe.utils.add_days(today, -ANSWERED_WINDOW_DAYS)],
+		},
+		fields,
+		order_by="date_answered desc, creation desc",
+	)
+	names = _titles(
+		"Mit People Missionary", "missionary_name", [r.missionary for r in active + answered]
+	)
+
+	def card(row) -> dict:
+		asked = frappe.utils.getdate(row.date_requested or row.creation)
+		until = frappe.utils.getdate(row.date_answered) if row.date_answered else today
+		return {
+			"name": row.name,
+			"title": row.request_title or row.name,
+			"missionary": names.get(row.missionary, row.missionary),
+			"category": row.category,
+			"text": _excerpt(row.request_text),
+			"days": max((until - asked).days, 0),
+			"date_answered": str(row.date_answered) if row.date_answered else None,
+		}
+
+	return {
+		"active": [card(r) for r in active[:PRAYERS_SHOWN]],
+		"active_count": len(active),
+		"answered": [card(r) for r in answered[:PRAYERS_SHOWN]],
+		"answered_count": len(answered),
+	}
+
+
+@frappe.whitelist(methods=["POST"])
+def mark_prayer_answered(name: str) -> dict:
+	"""Mark a prayer request answered today, as the reader."""
+	doc = frappe.get_doc("Mit Prayer Request", name)
+	doc.check_permission("write")
+	if doc.status != "Answered":
+		doc.status = "Answered"
+		doc.date_answered = frappe.utils.today()
+		doc.save()
+	return {"name": doc.name, "date_answered": str(doc.date_answered)}
+
+
+def _excerpt(text: str | None, limit: int = 180) -> str:
+	"""Plain text from *text*, cut at a word near *limit* characters."""
+	plain = " ".join(frappe.utils.strip_html(text or "").split())
+	if len(plain) <= limit:
+		return plain
+	return plain[:limit].rsplit(" ", 1)[0] + "…"
 
 
 def get_shortcuts() -> list[dict]:
@@ -629,17 +705,24 @@ def _count(doctype: str, filters: dict, title: str) -> int:
 		return 0
 
 
-def _list(doctype: str, filters: dict, fields: list[str], or_filters: dict | None = None) -> list:
+def _list(
+	doctype: str,
+	filters: dict,
+	fields: list[str],
+	or_filters: dict | None = None,
+	order_by: str | None = None,
+) -> list:
 	"""The matching records the reader may see, each tagged with its doctype. Empty when the
 	doctype is missing or the read fails, so one broken source does not blank the page."""
 	if not frappe.db.exists("DocType", doctype):
 		return []
 	try:
+		extra = {"order_by": order_by} if order_by else {}
 		rows = frappe.get_list(
-			doctype, filters=filters, or_filters=or_filters, fields=fields, limit_page_length=0
+			doctype, filters=filters, or_filters=or_filters, fields=fields, limit_page_length=0, **extra
 		)
 	except Exception:
-		frappe.log_error(title=f"Overview coming up {doctype}")
+		frappe.log_error(title=f"Overview list {doctype}")
 		return []
 	for row in rows:
 		row.doctype = doctype

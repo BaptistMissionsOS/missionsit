@@ -349,6 +349,152 @@ const Calendar = {
 	},
 };
 
+const ANSWER_API = "missionsit.mit_summary.page.overview.overview.mark_prayer_answered";
+
+function inPrayer(days, answered) {
+	if (answered) {
+		if (!days) return __("Answered the same day");
+		return days === 1 ? __("Answered after 1 day") : __("Answered after {0} days", [days]);
+	}
+	if (!days) return __("Asked today");
+	return days === 1 ? __("1 day in prayer") : __("{0} days in prayer", [days]);
+}
+
+// Prayer wall: what is being prayed for, and what has been answered. Marking a request
+// answered moves it across, so the answered list grows as the reader works through it.
+const PrayerWall = {
+	props: { prayers: Object },
+	setup(props) {
+		const tab = ref("active");
+		const busy = ref("");
+		const active = ref([...(props.prayers.active || [])]);
+		const answered = ref([...(props.prayers.answered || [])]);
+		const counts = reactive({
+			active: props.prayers.active_count || 0,
+			answered: props.prayers.answered_count || 0,
+		});
+
+		async function markAnswered(item) {
+			busy.value = item.name;
+			try {
+				const res = await frappe.xcall(ANSWER_API, { name: item.name });
+				active.value = active.value.filter((i) => i.name !== item.name);
+				answered.value = [{ ...item, date_answered: res.date_answered }, ...answered.value];
+				counts.active = Math.max(counts.active - 1, 0);
+				counts.answered += 1;
+				frappe.show_alert?.({ message: __("Marked answered. Praise God!"), indicator: "green" });
+			} catch (err) {
+				frappe.show_alert?.({ message: err.message || String(err), indicator: "red" });
+			} finally {
+				busy.value = "";
+			}
+		}
+
+		function entry(item, isAnswered) {
+			return h("li", { key: item.name, class: ["ov-prayer", isAnswered && "ov-prayer--answered"] }, [
+				h(
+					"button",
+					{
+						type: "button",
+						class: "ov-prayer__open",
+						onClick: () => frappe.set_route("Form", "Mit Prayer Request", item.name),
+					},
+					[
+						h("span", { class: "ov-prayer__title" }, item.title),
+						h("span", { class: "ov-prayer__meta" }, [
+							item.missionary ? h("span", {}, item.missionary) : null,
+							item.category ? h("span", { class: "ov-prayer__category" }, __(item.category)) : null,
+						]),
+						item.text ? h("span", { class: "ov-prayer__text" }, item.text) : null,
+					],
+				),
+				h("div", { class: "ov-prayer__foot" }, [
+					h("span", { class: "ov-prayer__days" }, [
+						isAnswered ? h("span", { innerHTML: icon("check", "sm") }) : null,
+						inPrayer(item.days, isAnswered),
+					]),
+					isAnswered
+						? null
+						: h(
+								"button",
+								{
+									type: "button",
+									class: "ov-cal__action",
+									disabled: busy.value === item.name,
+									onClick: () => markAnswered(item),
+								},
+								__("Mark answered"),
+						  ),
+				]),
+			]);
+		}
+
+		return () => {
+			const isAnswered = tab.value === "answered";
+			const items = isAnswered ? answered.value : active.value;
+			const total = isAnswered ? counts.answered : counts.active;
+			return h("section", { class: "ov-block ov-prayers", "aria-labelledby": "ov-prayers" }, [
+				h("div", { class: "ov-cal__bar" }, [
+					h("h2", { class: "ov-heading ov-cal__heading", id: "ov-prayers" }, __("Prayer wall")),
+					h(
+						"div",
+						{ class: "ov-switch ov-switch--small", role: "radiogroup", "aria-label": __("Show") },
+						[
+							["active", __("Praying"), counts.active],
+							["answered", __("Answered"), counts.answered],
+						].map(([key, label, n]) =>
+							h(
+								"button",
+								{
+									key,
+									type: "button",
+									role: "radio",
+									"aria-checked": String(tab.value === key),
+									class: ["ov-switch__option", tab.value === key && "is-on"],
+									onClick: () => (tab.value = key),
+								},
+								`${label} ${n}`,
+							),
+						),
+					),
+				]),
+				items.length
+					? h("ul", { class: "ov-prayer-list" }, items.map((item) => entry(item, isAnswered)))
+					: h(
+							"p",
+							{ class: "ov-quiet" },
+							isAnswered
+								? __("No answered prayers in the last 90 days yet.")
+								: __("No active prayer requests."),
+					  ),
+				h("p", { class: "ov-prayers__links" }, [
+					h(
+						"button",
+						{
+							type: "button",
+							class: "ov-link",
+							onClick: () => frappe.new_doc("Mit Prayer Request"),
+						},
+						__("Add a request"),
+					),
+					total > items.length
+						? h(
+								"button",
+								{
+									type: "button",
+									class: "ov-link",
+									onClick: () =>
+										openList("Mit Prayer Request", { status: isAnswered ? "Answered" : "Active" }),
+								},
+								__("See all {0}", [total]),
+						  )
+						: null,
+				]),
+			]);
+		};
+	},
+};
+
 const Dispatch = {
 	props: { verse: String, waiting: Number, support: Object },
 	setup(props) {
@@ -563,6 +709,7 @@ const App = {
 			support: null,
 			coming_up: [],
 			coming_later: [],
+			prayers: null,
 			shortcuts: [],
 			attention: [],
 			cards: [],
@@ -581,6 +728,7 @@ const App = {
 					support: data.support || null,
 					coming_up: data.coming_up || [],
 					coming_later: data.coming_later || [],
+					prayers: data.prayers || null,
 					shortcuts: data.shortcuts || [],
 					attention: data.attention || [],
 					cards: data.cards || [],
@@ -654,6 +802,8 @@ const App = {
 										: null,
 							  ])
 							: null,
+
+						state.prayers ? h(PrayerWall, { prayers: state.prayers }) : null,
 					]),
 
 					h("section", { class: "ov-block ov-block--ledger", "aria-labelledby": "ov-ledger" }, [

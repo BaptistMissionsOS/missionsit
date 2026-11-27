@@ -114,6 +114,22 @@ _FURLOUGHS = [
 	("Paul of Tarsus", 52, 230),
 ]
 
+# (title, missionary, category, status, requested day offset, answered day offset or None, text)
+_PRAYER_REQUESTS = [
+	("Visa renewal before the new year", "Paul of Tarsus",    "Travel",     "Active",   -12, None,
+	 "Pray the residency office approves our renewal before January, so the family can stay through spring."),
+	("Open doors in Berea",              "Silas Antiochan",   "Field Work", "Active",    -5, None,
+	 "Three families have asked for Bible studies. Pray for wisdom on scheduling and a place to meet."),
+	("Recovery after knee surgery",      "Barnabas Levi",     "Health",     "Active",    -2, None,
+	 "Pray for healing and patience during home assignment."),
+	("Funds for the Macedonia trip",     "Silas Antiochan",   "Support",    "Active",    -1, None,
+	 "The team is a third of the way to its goal. Pray for the remaining support to come in."),
+	("Safe arrival in Cyprus",           "Barnabas Levi",     "Travel",     "Answered", -40, -31,
+	 "Pray for safe travel and that every bag arrives."),
+	("A translator in Addis Ababa",      "Philip Evangelist", "Field Work", "Answered", -60, -12,
+	 "Pray for a believer fluent in Amharic to help with the new class."),
+]
+
 
 def load_sample_data() -> None:
 	"""Create the KJV-themed demo dataset. Safe to re-run."""
@@ -132,6 +148,7 @@ def load_sample_data() -> None:
 	_ensure_church_visits()
 	_ensure_email_campaigns()
 	_ensure_furloughs()
+	_ensure_prayer_requests()
 	frappe.db.commit()
 
 
@@ -380,5 +397,23 @@ def _ensure_furloughs() -> None:
 				"furlough_type": "Scheduled",
 				"start_date": add_days(today(), start),
 				"end_date": add_days(today(), end),
+			}
+		).insert(ignore_permissions=True)
+
+
+def _ensure_prayer_requests() -> None:
+	for title, missionary, category, status, asked, answered, text in _PRAYER_REQUESTS:
+		if frappe.db.exists("Mit Prayer Request", {"request_title": title, "missionary": missionary}):
+			continue
+		frappe.get_doc(
+			{
+				"doctype": "Mit Prayer Request",
+				"request_title": title,
+				"missionary": missionary,
+				"category": category,
+				"status": status,
+				"request_text": text,
+				"date_requested": add_days(today(), asked),
+				"date_answered": add_days(today(), answered) if answered is not None else None,
 			}
 		).insert(ignore_permissions=True)

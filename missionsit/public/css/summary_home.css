@@ -279,6 +279,115 @@
 	color: var(--ov-muted);
 }
 
+/* --- Prayer wall -------------------------------------------------------------------- */
+
+.ov-prayer-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--ov-line);
+}
+
+/* A thin airmail-red rule marks what is still being prayed for; answered ones turn sage. */
+.ov-prayer {
+	display: grid;
+	gap: 6px;
+	padding: 12px 0 12px 14px;
+	border-bottom: 1px solid var(--ov-line);
+	box-shadow: inset 3px 0 0 var(--ov-red);
+}
+
+.ov-prayer--answered {
+	box-shadow: inset 3px 0 0 var(--ov-sage);
+}
+
+.ov-prayer__open {
+	display: grid;
+	gap: 3px;
+	padding: 4px 8px;
+	margin: -4px 0 0 -8px;
+	border: 0;
+	border-radius: 6px;
+	background: none;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.ov-prayer__open:hover {
+	background: var(--ov-hover);
+}
+
+.ov-prayer__title {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.ov-prayer__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 10px;
+	font-size: 13px;
+	color: var(--ov-muted);
+}
+
+.ov-prayer__category {
+	padding: 0 8px;
+	border-radius: 999px;
+	background: var(--ov-hover);
+}
+
+.ov-prayer__text {
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--ov-text);
+	max-width: 62ch;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.ov-prayer__foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 16px;
+}
+
+.ov-prayer__days {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	color: var(--ov-muted);
+}
+
+.ov-prayer--answered .ov-prayer__days {
+	color: var(--ov-sage);
+	font-weight: 500;
+}
+
+.ov-prayers__links {
+	display: flex;
+	gap: 16px;
+	margin: 12px 0 0;
+}
+
+.ov-link {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--ov-blue);
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.ov-link:hover {
+	text-decoration: underline;
+}
+
 /* --- Coming up ---------------------------------------------------------------------- */
 
 .ov-main {
