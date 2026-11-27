@@ -51,35 +51,69 @@ function draw() {
     ),
   )
   map.addLayer(clusters)
-  if (props.churches.length) map.fitBounds(clusters.getBounds(), { padding: [24, 24], maxZoom: 9 })
+  // Churches across the world: show the whole world; otherwise frame where they are.
+  const bounds = clusters.getBounds()
+  if (!props.churches.length || !bounds.isValid()) return
+  if (bounds.getEast() - bounds.getWest() > 180) map.setView([24, 10], map.getMinZoom())
+  else map.fitBounds(bounds, { padding: [24, 24], maxZoom: 9 })
 }
+
+// One world, edge to edge: the map cannot be dragged past it, and at its furthest zoom the
+// world exactly fills the box's width, so there are no grey bands and no repeated copies.
+const WORLD = L.latLngBounds([-60, -180], [84, 180])
+
+function fitWorldWidth() {
+  if (!map) return
+  const width = el.value.clientWidth || 256
+  // Rounded up to the next quarter step, so the world always covers the full width.
+  const zoom = Math.max(0, Math.ceil(Math.log2(width / 256) * 4) / 4)
+  map.setMinZoom(zoom)
+  if (map.getZoom() < zoom) map.setZoom(zoom)
+}
+
+let resize = null
 
 onMounted(() => {
   map = L.map(el.value, {
-    center: [20, 10],
+    center: [24, 10],
     zoom: 2,
-    minZoom: 2,
-    worldCopyJump: true,
+    zoomSnap: 0.25,
+    maxBounds: WORLD.pad(0.05),
+    maxBoundsViscosity: 1,
     scrollWheelZoom: false,
     dragging: props.interactive,
     zoomControl: props.interactive,
     doubleClickZoom: props.interactive,
     attributionControl: true,
   })
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  // CARTO's Positron: OpenStreetMap data drawn in quiet greys, so the blue churches stand out.
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 19,
+    noWrap: true,
+    bounds: WORLD,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
   }).addTo(map)
+  fitWorldWidth()
   draw()
+  resize = new ResizeObserver(() => {
+    map.invalidateSize()
+    fitWorldWidth()
+  })
+  resize.observe(el.value)
 })
 watch(() => props.churches, draw)
-onBeforeUnmount(() => map?.remove())
+onBeforeUnmount(() => {
+  resize?.disconnect()
+  map?.remove()
+})
 </script>
 
 <template>
   <div
     ref="el"
-    class="isolate z-0 w-full overflow-hidden rounded-7 border border-ink/10 bg-mist"
+    class="isolate z-0 w-full overflow-hidden rounded-7 border border-ink/10 bg-[#D4DADC]"
     :style="{ height }"
     role="region"
     :aria-label="`Map of ${churches.length.toLocaleString()} churches`"
