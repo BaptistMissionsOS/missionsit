@@ -114,7 +114,7 @@ def get_dashboard() -> dict:
 	}
 
 
-PRAYERS_SHOWN = 6
+PRAYERS_SHOWN = 4
 ANSWERED_WINDOW_DAYS = 90
 
 

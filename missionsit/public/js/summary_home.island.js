@@ -390,6 +390,8 @@ const PrayerWall = {
 			}
 		}
 
+		// One line per request: title and who, then how long, then the action. The request
+		// itself shows on hover, and in full on its form.
 		function entry(item, isAnswered) {
 			return h("li", { key: item.name, class: ["ov-prayer", isAnswered && "ov-prayer--answered"] }, [
 				h(
@@ -397,35 +399,34 @@ const PrayerWall = {
 					{
 						type: "button",
 						class: "ov-prayer__open",
+						title: item.text || item.title,
 						onClick: () => frappe.set_route("Form", "Mit Prayer Request", item.name),
 					},
 					[
 						h("span", { class: "ov-prayer__title" }, item.title),
-						h("span", { class: "ov-prayer__meta" }, [
-							item.missionary ? h("span", {}, item.missionary) : null,
-							item.category ? h("span", { class: "ov-prayer__category" }, __(item.category)) : null,
-						]),
-						item.text ? h("span", { class: "ov-prayer__text" }, item.text) : null,
+						h(
+							"span",
+							{ class: "ov-prayer__meta" },
+							[item.missionary, item.category && __(item.category)].filter(Boolean).join(", "),
+						),
 					],
 				),
-				h("div", { class: "ov-prayer__foot" }, [
-					h("span", { class: "ov-prayer__days" }, [
-						isAnswered ? h("span", { innerHTML: icon("check", "sm") }) : null,
-						inPrayer(item.days, isAnswered),
-					]),
-					isAnswered
-						? null
-						: h(
-								"button",
-								{
-									type: "button",
-									class: "ov-cal__action",
-									disabled: busy.value === item.name,
-									onClick: () => markAnswered(item),
-								},
-								__("Mark answered"),
-						  ),
+				h("span", { class: "ov-prayer__days" }, [
+					isAnswered ? h("span", { innerHTML: icon("check", "sm") }) : null,
+					inPrayer(item.days, isAnswered),
 				]),
+				isAnswered
+					? null
+					: h(
+							"button",
+							{
+								type: "button",
+								class: "ov-prayer__answer",
+								disabled: busy.value === item.name,
+								onClick: () => markAnswered(item),
+							},
+							__("Mark answered"),
+					  ),
 			]);
 		}
 
