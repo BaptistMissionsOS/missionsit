@@ -111,10 +111,10 @@ bench --site your-site.localhost migrate
 
 ## 🌍 Web app
 
-The public web app (missionaries, trips, giving and the member portal) is a Vue 3 and [frappe-ui](https://github.com/frappe/frappe-ui) single page app in `frontend/`, served by the site at `/missions`. It uses yarn.
+The public web app (missionaries, trips, giving and the member portal) is a Vue 3 and [frappe-ui](https://github.com/frappe/frappe-ui) single page app in `missionsit/frontend/`, served by the site at `/missions`. It uses yarn.
 
 ```bash
-cd frontend
+cd missionsit/frontend
 yarn install
 yarn dev     # dev server with hot reload, proxied to your bench
 yarn build   # writes missionsit/public/frontend and missionsit/www/missions.html

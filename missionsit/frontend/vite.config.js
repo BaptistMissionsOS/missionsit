@@ -13,9 +13,9 @@ export default defineConfig({
     frappeui({
       frontendRoute: '/missions',
       buildConfig: {
-        outDir: '../missionsit/public/frontend',
+        outDir: '../public/frontend',
         baseUrl: '/assets/missionsit/frontend/',
-        indexHtmlPath: '../missionsit/www/missions.html',
+        indexHtmlPath: '../www/missions.html',
       },
     }),
     vue(),
