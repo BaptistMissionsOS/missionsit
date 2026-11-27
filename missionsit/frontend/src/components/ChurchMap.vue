@@ -1,11 +1,12 @@
 <!-- This source code is freely given for the sake of the gospel (Matthew 10:8)
      and is licensed under MIT No Attribution (MIT-0). -->
 <script setup>
-// OpenStreetMap through Leaflet. Pins are drawn as circles rather than image markers, so there
-// are no marker images to serve, and each shows only the church's name.
+// OpenStreetMap through Leaflet, with nearby churches gathered into clusters until you zoom in.
+// Each pin shows only the church's name.
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
+import L from '@/leaflet'
+import 'leaflet.markercluster'
+import 'leaflet.markercluster/dist/MarkerCluster.css'
 
 const props = defineProps({
   churches: { type: Array, default: () => [] },
@@ -15,33 +16,54 @@ const props = defineProps({
 
 const el = ref(null)
 let map = null
-let layer = null
+let clusters = null
+
+// A small dot for one church, drawn in CSS so there are no marker images to serve.
+const pin = L.divIcon({ className: 'church-pin', iconSize: [12, 12], iconAnchor: [6, 6] })
+
+function clusterIcon(cluster) {
+  const count = cluster.getChildCount()
+  const size = count < 10 ? 30 : count < 100 ? 36 : count < 1000 ? 44 : 52
+  const label = count >= 1000 ? `${(count / 1000).toFixed(count >= 10000 ? 0 : 1)}k` : String(count)
+  return L.divIcon({
+    html: `<span>${label}</span>`,
+    className: 'church-cluster',
+    iconSize: [size, size],
+  })
+}
 
 function draw() {
   if (!map) return
-  layer?.remove()
-  layer = L.featureGroup(
+  clusters?.remove()
+  clusters = L.markerClusterGroup({
+    chunkedLoading: true,
+    showCoverageOnHover: false,
+    spiderfyOnMaxZoom: true,
+    maxClusterRadius: 50,
+    iconCreateFunction: clusterIcon,
+  })
+  clusters.addLayers(
     props.churches.map((c) =>
-      L.circleMarker([c.lat, c.lng], {
-        radius: 6,
-        weight: 2,
-        color: '#FFFFFF',
-        fillColor: '#2D4E9C',
-        fillOpacity: 1,
-      }).bindTooltip(c.name, { direction: 'top', offset: [0, -6] }),
+      L.marker([c.lat, c.lng], { icon: pin, title: c.name, alt: c.name, keyboard: false }).bindTooltip(c.name, {
+        direction: 'top',
+        offset: [0, -6],
+      }),
     ),
-  ).addTo(map)
-  if (props.churches.length) map.fitBounds(layer.getBounds(), { padding: [32, 32], maxZoom: 9 })
+  )
+  map.addLayer(clusters)
+  if (props.churches.length) map.fitBounds(clusters.getBounds(), { padding: [24, 24], maxZoom: 9 })
 }
 
 onMounted(() => {
   map = L.map(el.value, {
     center: [20, 10],
     zoom: 2,
+    minZoom: 2,
     worldCopyJump: true,
     scrollWheelZoom: false,
     dragging: props.interactive,
     zoomControl: props.interactive,
+    doubleClickZoom: props.interactive,
     attributionControl: true,
   })
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -60,6 +82,35 @@ onBeforeUnmount(() => map?.remove())
     class="isolate z-0 w-full overflow-hidden rounded-7 border border-ink/10 bg-mist"
     :style="{ height }"
     role="region"
-    :aria-label="`Map of ${churches.length} churches`"
+    :aria-label="`Map of ${churches.length.toLocaleString()} churches`"
   />
 </template>
+
+<style>
+.church-pin {
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #2d4e9c;
+  box-shadow: 0 1px 3px rgba(20, 33, 61, 0.35);
+}
+
+/* Clusters: airmail blue with a soft halo, the count in white. */
+.church-cluster {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(45, 78, 156, 0.25);
+}
+
+.church-cluster span {
+  display: grid;
+  place-items: center;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  border-radius: 50%;
+  background: #2d4e9c;
+  color: #fff;
+  font: 600 12px/1 Inter, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+</style>

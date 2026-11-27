@@ -66,7 +66,7 @@ const reach = computed(() => {
             Churches that welcome missionaries, on one map. Know one that is missing? Add it, or send a whole list, and our team checks each before it appears.
           </p>
           <p v-if="directory.data" class="mt-2 font-medium text-airmail">
-            {{ churches.length === 1 ? '1 church on the map' : `${churches.length} churches on the map` }}
+            {{ churches.length === 1 ? '1 church on the map' : `${churches.length.toLocaleString()} churches on the map` }}
           </p>
           <div class="mt-6 flex flex-wrap gap-3">
             <RouterLink to="/directory" class="rounded-full bg-airmail px-5 py-3 text-sm font-semibold text-white hover:bg-airmail-dark">Open the directory</RouterLink>

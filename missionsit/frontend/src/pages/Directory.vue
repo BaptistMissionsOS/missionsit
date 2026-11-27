@@ -18,7 +18,7 @@ const churches = computed(() => directory.data?.churches || [])
       Churches that welcome missionaries, kept up to date by the people who know them. The map shows each church’s name and where it meets.
     </p>
     <p v-if="directory.data" class="mt-2 font-medium text-airmail">
-      {{ churches.length === 1 ? '1 church on the map' : `${churches.length} churches on the map` }}
+      {{ churches.length === 1 ? '1 church on the map' : `${churches.length.toLocaleString()} churches on the map` }}
     </p>
 
     <ChurchMap class="mt-8" :churches="churches" height="min(32rem, 70vh)" />
