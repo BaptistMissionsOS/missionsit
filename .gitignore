@@ -14,7 +14,7 @@ env/
 
 # Frappe
 *.pyc
-node_modules/
+node_modules
 .DS_Store
 *.swp
 *.swo
@@ -34,6 +34,8 @@ Thumbs.db
 .claude/
 
 # Web app build (yarn build in missionsit/frontend writes these)
-node_modules/
 missionsit/public/frontend/
 missionsit/www/missions.html
+
+# Local import data (CSVs the user drops in for one-off imports)
+missionsit/setup/data/*.csv
