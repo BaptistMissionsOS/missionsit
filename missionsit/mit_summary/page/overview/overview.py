@@ -238,7 +238,8 @@ def get_coming_up(days: int = COMING_UP_DAYS, limit: int = 12) -> list[dict]:
 	def add(date, kind, title, doctype, name, icon, action=None, planned=False):
 		items.append(
 			{
-				"date": str(date),
+				# Scheduled emails carry a time; the calendar groups by day.
+				"date": str(frappe.utils.getdate(date)),
 				"kind": kind,
 				"group": CALENDAR_GROUPS[kind],
 				"title": title,
