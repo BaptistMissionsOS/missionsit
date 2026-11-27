@@ -20,6 +20,11 @@ export default defineConfig({
     }),
     vue(),
   ],
+  build: {
+    // The map chunk is mostly MapLibre GL (about 1 MB, 275 kB gzipped). It is split out already
+    // and loads only on pages with a map, so this warning would only repeat what we know.
+    chunkSizeWarningLimit: 1100,
+  },
   resolve: {
     alias: { '@': path.resolve(__dirname, 'src') },
   },
