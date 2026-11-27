@@ -119,45 +119,233 @@ const SupportLevel = {
 	},
 };
 
-const ComingUp = {
-	props: { items: Array, later: Boolean },
+const CALENDAR_API = "missionsit.mit_summary.page.overview.overview.get_calendar";
+const PLAN_API = "missionsit.mit_summary.page.overview.overview.plan_action";
+
+const RANGES = [
+	{ days: 14, label: "2 weeks" },
+	{ days: 30, label: "30 days" },
+	{ days: 90, label: "90 days" },
+];
+
+const GROUPS = [
+	{ key: "all", label: "All" },
+	{ key: "visits", label: "Visits" },
+	{ key: "occasions", label: "Birthdays" },
+	{ key: "trips", label: "Trips" },
+	{ key: "furlough", label: "Furlough" },
+	{ key: "emails", label: "Emails" },
+];
+
+function dayLabel(iso) {
+	const d = new Date(`${iso}T00:00:00`);
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	const days = Math.round((d - today) / 86400000);
+	if (days === 0) return __("Today");
+	if (days === 1) return __("Tomorrow");
+	return d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+}
+
+// What a person can do with an item, before and after doing it.
+const ACTIONS = {
+	card: { verb: "Plan a card", done: "Card planned", icon: "mail-plus" },
+	follow_up: { verb: "Plan follow-up", done: "Follow-up planned", icon: "phone-forwarded" },
+};
+
+// Coming up: a range switch, filter chips with counts, items grouped by day, and one action on
+// the items that have one. Opens on the fortnight the dashboard already sent.
+const Calendar = {
+	props: { initial: Array, later: Array },
 	setup(props) {
-		const fmt = (iso) => {
-			const d = new Date(`${iso}T00:00:00`);
-			const today = new Date();
-			today.setHours(0, 0, 0, 0);
-			const days = Math.round((d - today) / 86400000);
-			if (days === 0) return __("Today");
-			if (days === 1) return __("Tomorrow");
-			return d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
-		};
-		return () =>
-			h(
+		const range = ref(14);
+		const group = ref("all");
+		const items = ref(props.initial || []);
+		const loading = ref(false);
+		const failed = ref("");
+		const busy = ref("");
+		const cache = new Map([[14, props.initial || []]]);
+
+		const counts = computed(() => {
+			const c = { all: items.value.length };
+			for (const i of items.value) c[i.group] = (c[i.group] || 0) + 1;
+			return c;
+		});
+		// Only the filters that have something in this range, so no chip leads nowhere.
+		const groups = computed(() => GROUPS.filter((g) => g.key === "all" || counts.value[g.key]));
+		const shown = computed(() =>
+			group.value === "all" ? items.value : items.value.filter((i) => i.group === group.value),
+		);
+		const days = computed(() => byDay(shown.value));
+
+		async function pickRange(daysAhead) {
+			if (daysAhead === range.value) return;
+			range.value = daysAhead;
+			failed.value = "";
+			if (cache.has(daysAhead)) {
+				items.value = cache.get(daysAhead);
+			} else {
+				loading.value = true;
+				try {
+					const data = await frappe.xcall(CALENDAR_API, { days: daysAhead }, "GET");
+					cache.set(daysAhead, data);
+					if (range.value === daysAhead) items.value = data;
+				} catch (err) {
+					failed.value = err.message || String(err);
+				} finally {
+					loading.value = false;
+				}
+			}
+			if (!counts.value[group.value]) group.value = "all";
+		}
+
+		async function plan(item) {
+			const key = `${item.doctype}:${item.name}:${item.kind}`;
+			busy.value = key;
+			try {
+				const res = await frappe.xcall(PLAN_API, {
+					doctype: item.doctype,
+					name: item.name,
+					kind: item.kind,
+					date: item.date,
+				});
+				// The same occasion can sit in more than one cached range.
+				for (const list of cache.values())
+					for (const other of list)
+						if (other.doctype === item.doctype && other.name === item.name && other.kind === item.kind)
+							other.planned = true;
+				item.planned = true;
+				frappe.show_alert?.({ message: __(res.label), indicator: "green" });
+			} catch (err) {
+				frappe.show_alert?.({ message: err.message || String(err), indicator: "red" });
+			} finally {
+				busy.value = "";
+			}
+		}
+
+		function actionButton(item) {
+			const action = ACTIONS[item.action];
+			if (!action) return null;
+			if (item.planned)
+				return h("span", { class: "ov-cal__done" }, [
+					h("span", { innerHTML: icon("check", "sm") }),
+					__(action.done),
+				]);
+			const key = `${item.doctype}:${item.name}:${item.kind}`;
+			return h(
+				"button",
+				{
+					type: "button",
+					class: "ov-cal__action",
+					disabled: busy.value === key,
+					onClick: () => plan(item),
+				},
+				[h("span", { innerHTML: icon(action.icon, "sm") }), __(action.verb)],
+			);
+		}
+
+		function list(dayGroups, later = false) {
+			return h(
 				"ol",
-				{ class: ["ov-coming", props.later && "ov-coming--later"] },
-				props.items.map((item) =>
-					h(
-						"li",
-						{ key: `${item.doctype}:${item.name}:${item.kind}`, class: "ov-coming__item" },
+				{ class: ["ov-cal__days", later && "ov-cal__days--later"] },
+				dayGroups.map((day) =>
+					h("li", { key: day.date, class: "ov-cal__day" }, [
+						h("time", { class: "ov-cal__date", datetime: day.date }, dayLabel(day.date)),
 						h(
-							"button",
-							{
-								type: "button",
-								class: "ov-coming__button",
-								onClick: () => frappe.set_route("Form", item.doctype, item.name),
-							},
-							[
-								h("time", { class: "ov-coming__date", datetime: item.date }, fmt(item.date)),
-								h("span", { class: "ov-coming__icon", innerHTML: icon(item.icon, "sm") }),
-								h("span", { class: "ov-coming__text" }, [
-									h("span", { class: "ov-coming__title" }, item.title),
-									h("span", { class: "ov-coming__kind" }, __(item.kind)),
+							"ul",
+							{ class: "ov-cal__items" },
+							day.items.map((item) =>
+								h("li", { key: `${item.doctype}:${item.name}:${item.kind}`, class: "ov-cal__item" }, [
+									h("span", { class: "ov-cal__icon", innerHTML: icon(item.icon, "sm") }),
+									h(
+										"button",
+										{
+											type: "button",
+											class: "ov-cal__open",
+											onClick: () => frappe.set_route("Form", item.doctype, item.name),
+										},
+										[
+											h("span", { class: "ov-cal__title" }, item.title),
+											h("span", { class: "ov-cal__kind" }, __(item.kind)),
+										],
+									),
+									actionButton(item),
 								]),
-							],
+							),
 						),
-					),
+					]),
 				),
 			);
+		}
+
+		function byDay(entries) {
+			const out = [];
+			for (const item of entries) {
+				const last = out[out.length - 1];
+				if (last && last.date === item.date) last.items.push(item);
+				else out.push({ date: item.date, items: [item] });
+			}
+			return out;
+		}
+
+		return () =>
+			h("section", { class: "ov-block ov-cal", "aria-labelledby": "ov-coming" }, [
+				h("div", { class: "ov-cal__bar" }, [
+					h("h2", { class: "ov-heading ov-cal__heading", id: "ov-coming" }, __("Coming up")),
+					h(
+						"div",
+						{ class: "ov-switch ov-switch--small", role: "radiogroup", "aria-label": __("How far ahead") },
+						RANGES.map((r) =>
+							h(
+								"button",
+								{
+									key: r.days,
+									type: "button",
+									role: "radio",
+									"aria-checked": String(r.days === range.value),
+									class: ["ov-switch__option", r.days === range.value && "is-on"],
+									onClick: () => pickRange(r.days),
+								},
+								__(r.label),
+							),
+						),
+					),
+				]),
+				items.value.length > 1 && groups.value.length > 2
+					? h(
+							"div",
+							{ class: "ov-chips", role: "group", "aria-label": __("Show only") },
+							groups.value.map((g) =>
+								h(
+									"button",
+									{
+										key: g.key,
+										type: "button",
+										"aria-pressed": String(g.key === group.value),
+										class: ["ov-chip", g.key === group.value && "is-on"],
+										onClick: () => (group.value = g.key),
+									},
+									[__(g.label), h("span", { class: "ov-chip__count" }, counts.value[g.key])],
+								),
+							),
+					  )
+					: null,
+				h("div", { class: ["ov-cal__body", loading.value && "is-loading"] }, [
+					failed.value
+						? h("p", { class: "ov-quiet" }, __("Coming up could not load: {0}", [failed.value]))
+						: items.value.length
+						? list(days.value)
+						: h("p", { class: "ov-quiet" }, [
+								range.value === 14
+									? __("Nothing on the calendar for the next two weeks.")
+									: __("Nothing on the calendar for the next {0} days.", [range.value]),
+								range.value === 14 && props.later?.length ? " " + __("Next up:") : "",
+						  ]),
+					!items.value.length && range.value === 14 && props.later?.length
+						? list(byDay(props.later), true)
+						: null,
+				]),
+			]);
 	},
 };
 
@@ -467,18 +655,7 @@ const App = {
 							  ])
 							: null,
 
-						h("section", { class: "ov-block", "aria-labelledby": "ov-coming" }, [
-							h("h2", { class: "ov-heading", id: "ov-coming" }, __("Coming up")),
-							state.coming_up.length
-								? h(ComingUp, { items: state.coming_up })
-								: h("p", { class: "ov-quiet" }, [
-										__("Nothing on the calendar for the next two weeks."),
-										state.coming_later.length ? " " + __("Next up:") : "",
-								  ]),
-							!state.coming_up.length && state.coming_later.length
-								? h(ComingUp, { items: state.coming_later, later: true })
-								: null,
-						]),
+						h(Calendar, { initial: state.coming_up, later: state.coming_later }),
 					]),
 
 					h("section", { class: "ov-block ov-block--ledger", "aria-labelledby": "ov-ledger" }, [

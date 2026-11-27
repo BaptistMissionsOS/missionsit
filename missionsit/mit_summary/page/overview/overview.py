@@ -30,6 +30,8 @@ CARDS = [
 
 
 COMING_UP_DAYS = 14
+CARD_LEAD_DAYS = 3
+FOLLOW_UP_AFTER_DAYS = 2
 LATER_DAYS = 180
 RECEIPT_WINDOW_DAYS = 90
 FOLLOW_UP_WINDOW_DAYS = 14
@@ -199,34 +201,72 @@ def get_support() -> dict | None:
 	}
 
 
+CALENDAR_RANGES = (14, 30, 90)
+
+# What each kind of date is grouped under in the filter, and the action a person can take on it.
+CALENDAR_GROUPS = {
+	"Church visit": "visits",
+	"Trip starts": "trips",
+	"Furlough starts": "furlough",
+	"Email goes out": "emails",
+	"Birthday": "occasions",
+	"Anniversary": "occasions",
+}
+
+
+@frappe.whitelist(methods=["GET"])
+def get_calendar(days: int = COMING_UP_DAYS) -> list[dict]:
+	"""Coming up over one of the ranges the page offers."""
+	days = int(days)
+	if days not in CALENDAR_RANGES:
+		frappe.throw(frappe._("Coming up covers {0} days.").format(", ".join(map(str, CALENDAR_RANGES))))
+	return get_coming_up(days=days, limit=60)
+
+
 def get_coming_up(days: int = COMING_UP_DAYS, limit: int = 12) -> list[dict]:
 	"""Dated things in the next *days* days: church visits, trips, furlough, scheduled emails, and
-	supporters' birthdays and anniversaries. Soonest first, at most *limit*."""
+	supporters' birthdays and anniversaries. Soonest first, at most *limit*.
+
+	Birthdays, anniversaries and church visits carry an action: plan a card, or plan the follow-up
+	after the visit. `planned` says whether that task already exists.
+	"""
 	today = frappe.utils.getdate()
 	until = frappe.utils.add_days(today, days - 1)
 	window = ["between", [today, until]]
 	items = []
 
-	def add(date, kind, title, doctype, name, icon):
+	def add(date, kind, title, doctype, name, icon, action=None, planned=False):
 		items.append(
 			{
 				"date": str(date),
 				"kind": kind,
+				"group": CALENDAR_GROUPS[kind],
 				"title": title,
 				"doctype": doctype,
 				"name": name,
 				"icon": icon,
+				"action": action,
+				"planned": planned,
 			}
 		)
 
 	visits = _list(
 		"Mit Deputation Church Visit",
 		{"status": "Planned", "visit_date": window},
-		["name", "visit_date", "church"],
+		["name", "visit_date", "church", "follow_up_task"],
 	)
 	churches = _titles("Mit Directory Church", "church_name", [v.church for v in visits])
 	for v in visits:
-		add(v.visit_date, "Church visit", churches.get(v.church, v.church), v.doctype, v.name, "church")
+		add(
+			v.visit_date,
+			"Church visit",
+			churches.get(v.church, v.church),
+			v.doctype,
+			v.name,
+			"church",
+			action="follow_up",
+			planned=bool(v.follow_up_task),
+		)
 
 	for t in _list(
 		"Mit Trip", {"status": ["not in", ["Cancelled", "Completed"]], "start_date": window}, ["name", "start_date"]
@@ -247,6 +287,7 @@ def get_coming_up(days: int = COMING_UP_DAYS, limit: int = 12) -> list[dict]:
 	):
 		add(c.scheduled_date, "Email goes out", c.name, c.doctype, c.name, "send")
 
+	occasions = []
 	for s in _list(
 		"Mit People Supporter",
 		{"status": "Active"},
@@ -256,10 +297,103 @@ def get_coming_up(days: int = COMING_UP_DAYS, limit: int = 12) -> list[dict]:
 		for field, kind, icon in (("birthday", "Birthday", "cake"), ("anniversary", "Anniversary", "heart")):
 			date = _next_occurrence(s.get(field), today)
 			if date and date <= until:
-				add(date, kind, s.full_name or s.name, s.doctype, s.name, icon)
+				occasions.append((date, kind, s, icon))
+	planned = _planned_cards([s.name for _, _, s, _ in occasions], today, until)
+	for date, kind, s, icon in occasions:
+		add(
+			date,
+			kind,
+			s.full_name or s.name,
+			s.doctype,
+			s.name,
+			icon,
+			action="card",
+			planned=(s.name, kind) in planned,
+		)
 
 	items.sort(key=lambda i: (i["date"], i["kind"], i["title"]))
 	return items[:limit]
+
+
+def _card_title(kind: str, name: str) -> str:
+	return frappe._("Send {0} a birthday card").format(name) if kind == "Birthday" else frappe._(
+		"Send {0} an anniversary card"
+	).format(name)
+
+
+def _planned_cards(supporters: list[str], today, until) -> set[tuple[str, str]]:
+	"""(supporter, kind) pairs that already have an open card task due before the occasion."""
+	if not supporters:
+		return set()
+	tasks = _list(
+		"Mit Correspondence Ministry Task",
+		{
+			"supporter": ["in", supporters],
+			"status": "Open",
+			"due_date": ["between", [frappe.utils.add_days(today, -CARD_LEAD_DAYS), until]],
+		},
+		["supporter", "tag", "title"],
+	)
+	planned = set()
+	for task in tasks:
+		if task.tag == "Birthday":
+			planned.add((task.supporter, "Birthday"))
+		elif "anniversary" in (task.title or "").lower():
+			planned.add((task.supporter, "Anniversary"))
+	return planned
+
+
+@frappe.whitelist(methods=["POST"])
+def plan_action(doctype: str, name: str, kind: str, date: str) -> dict:
+	"""Create the task behind a Coming up action and say what was made.
+
+	A card for a birthday or anniversary is a Letter task, due a few days before so it arrives
+	in time. A church visit's follow-up is a Call task due two days after the visit, linked back
+	to the visit. Both are inserted as the reader, so their own permissions apply.
+	"""
+	date = frappe.utils.getdate(date)
+	today = frappe.utils.getdate()
+
+	if doctype == "Mit People Supporter" and kind in ("Birthday", "Anniversary"):
+		supporter = frappe.get_doc(doctype, name)
+		supporter.check_permission("read")
+		task = frappe.get_doc(
+			{
+				"doctype": "Mit Correspondence Ministry Task",
+				"title": _card_title(kind, supporter.full_name or supporter.name),
+				"task_type": "Letter",
+				"tag": "Birthday" if kind == "Birthday" else "Other",
+				"supporter": supporter.name,
+				"missionary": supporter.missionary,
+				"due_date": max(today, frappe.utils.add_days(date, -CARD_LEAD_DAYS)),
+				"status": "Open",
+				"priority": "Medium",
+			}
+		).insert()
+		return {"task": task.name, "label": frappe._("Card planned")}
+
+	if doctype == "Mit Deputation Church Visit" and kind == "Church visit":
+		visit = frappe.get_doc(doctype, name)
+		visit.check_permission("write")
+		if visit.follow_up_task:
+			return {"task": visit.follow_up_task, "label": frappe._("Follow-up planned")}
+		church = frappe.db.get_value("Mit Directory Church", visit.church, "church_name") or visit.church
+		task = frappe.get_doc(
+			{
+				"doctype": "Mit Correspondence Ministry Task",
+				"title": frappe._("Follow up after visiting {0}").format(church),
+				"task_type": "Call",
+				"tag": "Follow-up",
+				"missionary": visit.missionary,
+				"due_date": frappe.utils.add_days(visit.visit_date, FOLLOW_UP_AFTER_DAYS),
+				"status": "Open",
+				"priority": "Medium",
+			}
+		).insert()
+		visit.db_set("follow_up_task", task.name)
+		return {"task": task.name, "label": frappe._("Follow-up planned")}
+
+	frappe.throw(frappe._("There is nothing to plan for this item."))
 
 
 def get_website() -> dict:

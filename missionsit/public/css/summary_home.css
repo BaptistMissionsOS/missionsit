@@ -286,73 +286,194 @@
 	gap: 40px;
 }
 
-.ov-coming {
+.ov-cal__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px 16px;
+	margin-bottom: 12px;
+}
+
+.ov-cal__heading {
+	margin: 0;
+}
+
+.ov-switch--small .ov-switch__option {
+	font-size: 13px;
+	padding: 3px 11px;
+}
+
+/* Filter chips: outlined until chosen, each with how many it holds. */
+.ov-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 12px;
+}
+
+.ov-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 6px 3px 11px;
+	border: 1px solid var(--ov-line);
+	border-radius: 999px;
+	background: none;
+	color: var(--ov-text);
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.ov-chip:hover {
+	border-color: var(--ov-blue);
+}
+
+.ov-chip__count {
+	min-width: 20px;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: var(--ov-hover);
+	color: var(--ov-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+}
+
+.ov-chip.is-on {
+	border-color: var(--ov-blue);
+	background: color-mix(in srgb, var(--ov-blue) 10%, transparent);
+	color: var(--ov-blue);
+	font-weight: 600;
+}
+
+.ov-chip.is-on .ov-chip__count {
+	background: var(--ov-blue);
+	color: var(--ov-surface);
+}
+
+.ov-cal__body {
+	transition: opacity 150ms ease;
+}
+
+.ov-cal__body.is-loading {
+	opacity: 0.55;
+}
+
+.ov-cal__days {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	border-top: 1px solid var(--ov-line);
 }
 
-.ov-coming--later {
+.ov-cal__days--later {
 	margin-top: 12px;
 }
 
-/* Further off than the fortnight: the dates step back from airmail blue. */
-.ov-coming--later .ov-coming__date {
-	color: var(--ov-muted);
-}
-
-.ov-coming__item {
+/* One row per day: the date on the left, that day's items stacked beside it. */
+.ov-cal__day {
+	display: grid;
+	grid-template-columns: 96px minmax(0, 1fr);
+	gap: 12px;
+	padding: 10px 0;
 	border-bottom: 1px solid var(--ov-line);
 }
 
-.ov-coming__button {
-	width: 100%;
-	display: grid;
-	grid-template-columns: 96px 20px minmax(0, 1fr);
-	align-items: center;
-	gap: 12px;
-	padding: 11px 8px;
-	border: 0;
-	background: none;
-	color: inherit;
-	text-align: left;
-	cursor: pointer;
-	border-radius: 6px;
-}
-
-.ov-coming__button:hover {
-	background: var(--ov-hover);
-}
-
-.ov-coming__date {
+.ov-cal__date {
+	padding: 7px 0 0 8px;
 	font-size: 14px;
 	font-weight: 600;
 	font-variant-numeric: tabular-nums;
 	color: var(--ov-blue);
 }
 
-.ov-coming__icon {
+.ov-cal__days--later .ov-cal__date {
+	color: var(--ov-muted);
+}
+
+.ov-cal__items {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 2px;
+}
+
+.ov-cal__item {
+	display: grid;
+	grid-template-columns: 20px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 10px;
+	min-height: 36px;
+}
+
+.ov-cal__icon {
 	display: inline-flex;
 	color: var(--ov-muted);
 }
 
-.ov-coming__text {
+.ov-cal__open {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: baseline;
 	gap: 2px 10px;
 	min-width: 0;
+	padding: 6px 8px;
+	margin-left: -8px;
+	border: 0;
+	border-radius: 6px;
+	background: none;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
 }
 
-.ov-coming__title {
+.ov-cal__open:hover {
+	background: var(--ov-hover);
+}
+
+.ov-cal__title {
 	font-size: 15px;
 	font-weight: 500;
 }
 
-.ov-coming__kind {
+.ov-cal__kind {
 	font-size: 13px;
 	color: var(--ov-muted);
+}
+
+.ov-cal__action,
+.ov-cal__done {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	white-space: nowrap;
+}
+
+.ov-cal__action {
+	padding: 4px 10px;
+	border: 1px solid var(--ov-line);
+	border-radius: 999px;
+	background: var(--ov-surface);
+	color: var(--ov-blue);
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.ov-cal__action:hover {
+	border-color: var(--ov-blue);
+}
+
+.ov-cal__action:disabled {
+	opacity: 0.6;
+	cursor: progress;
+}
+
+.ov-cal__done {
+	padding: 4px 4px 4px 10px;
+	color: var(--ov-sage);
 }
 
 /* --- Support ledger ------------------------------------------------------------------ */
@@ -591,9 +712,24 @@
 		font-size: 24px;
 	}
 
-	.ov-coming__button {
-		grid-template-columns: 76px 18px minmax(0, 1fr);
-		gap: 10px;
+	.ov-cal__day {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2px;
+	}
+
+	.ov-cal__date {
+		padding: 0 0 0 4px;
+	}
+
+	.ov-cal__item {
+		grid-template-columns: 18px minmax(0, 1fr);
+	}
+
+	.ov-cal__action,
+	.ov-cal__done {
+		grid-column: 2;
+		justify-self: start;
+		margin-bottom: 6px;
 	}
 
 	.ov-trends__view,
@@ -608,7 +744,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.ov-trends__panel {
+	.ov-trends__panel,
+	.ov-cal__body {
 		transition: none;
 	}
 }
