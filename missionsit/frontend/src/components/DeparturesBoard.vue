@@ -36,7 +36,7 @@ const rows = computed(() =>
     <ol v-if="rows.length" class="divide-y divide-white/10">
       <li v-for="trip in rows" :key="trip.name">
         <RouterLink
-          :to="{ path: '/trips', hash: `#${encodeURIComponent(trip.name)}` }"
+          :to="{ path: '/portal/trips', hash: `#${encodeURIComponent(trip.name)}` }"
           class="grid grid-cols-[3.25rem_minmax(0,1fr)_4.25rem] items-center gap-3 py-3 sm:grid-cols-[4.5rem_minmax(0,1fr)_5rem]"
           :aria-label="`${trip.name}, ${trip.place}, ${day(trip.start_date)}, ${trip.status}`"
         >

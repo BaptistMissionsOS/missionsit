@@ -9,7 +9,7 @@ import { links } from '@/utils'
 
 const nav = [
   { label: 'Missionaries', to: '/missionaries' },
-  { label: 'Trips', to: '/trips' },
+  { label: 'Church Directory', to: '/directory' },
   { label: 'Give', to: '/give' },
 ]
 const open = ref(false)

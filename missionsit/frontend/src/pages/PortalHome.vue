@@ -1,16 +1,12 @@
 <!-- This source code is freely given for the sake of the gospel (Matthew 10:8)
      and is licensed under MIT No Attribution (MIT-0). -->
 <script setup>
-import { computed, watch } from 'vue'
 import { createResource } from 'frappe-ui'
 import PageState from '@/components/PageState.vue'
-import { site } from '@/data'
-import { day, links, money } from '@/utils'
+import { day, money } from '@/utils'
 
-const portal = createResource({ url: '/api/method/missionsit.api.web.get_portal' })
-// Only ask for the portal once we know someone is signed in.
-const signedIn = computed(() => !!site.data?.user)
-watch(signedIn, (yes) => yes && !portal.data && portal.fetch(), { immediate: true })
+// The portal layout only renders this once someone is signed in.
+const portal = createResource({ url: '/api/method/missionsit.api.web.get_portal', auto: true })
 
 const STATUS_TONE = {
   Accepted: 'bg-sage-tint text-sage',
@@ -26,14 +22,8 @@ const STATUS_TONE = {
 </script>
 
 <template>
-  <div class="page pt-12">
-    <template v-if="site.data && !signedIn">
-      <h1 class="heading t-h1">Member Portal</h1>
-      <p class="mt-3 max-w-xl t-lead text-ink-soft">Sign in to see your gifts, monthly giving, pledges and trip applications in one place.</p>
-      <a :href="links.signIn()" class="mt-6 inline-flex rounded-full bg-airmail px-5 py-3 text-sm font-semibold text-white hover:bg-airmail-dark">Sign in</a>
-    </template>
-
-    <PageState v-else-if="signedIn" :resource="portal" v-slot="{ data }">
+  <div>
+    <PageState :resource="portal" v-slot="{ data }">
       <h1 class="heading t-h1">Welcome back, {{ data.user.first_name }}</h1>
       <p v-if="data.linked" class="mt-3 t-lead text-ink-soft">
         You have given <strong class="text-ink">{{ money(data.given_this_year) }}</strong> this year. Thank you.
@@ -93,7 +83,7 @@ const STATUS_TONE = {
               </li>
             </ul>
             <p v-else class="mt-3 text-sm text-ink-soft">
-              No applications. <RouterLink to="/trips" class="font-semibold text-airmail hover:underline">See upcoming trips</RouterLink>.
+              No applications. <RouterLink to="/portal/trips" class="font-semibold text-airmail hover:underline">See upcoming trips</RouterLink>.
             </p>
           </section>
         </div>

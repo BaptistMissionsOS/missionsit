@@ -15,7 +15,7 @@ import { site } from '@/data'
       </div>
       <nav aria-label="Footer" class="grid content-start gap-2 text-sm">
         <RouterLink to="/missionaries" class="hover:text-white">Missionaries</RouterLink>
-        <RouterLink to="/trips" class="hover:text-white">Trips</RouterLink>
+        <RouterLink to="/directory" class="hover:text-white">Church Directory</RouterLink>
         <RouterLink to="/give" class="hover:text-white">Give</RouterLink>
         <RouterLink to="/portal" class="hover:text-white">Member Portal</RouterLink>
       </nav>

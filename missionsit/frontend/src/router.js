@@ -12,14 +12,32 @@ const routes = [
     component: () => import('./pages/Missionary.vue'),
     props: true,
   },
-  { path: '/trips', name: 'Trips', component: () => import('./pages/Trips.vue') },
+  { path: '/directory', name: 'Directory', component: () => import('./pages/Directory.vue') },
   { path: '/give', name: 'Give', component: () => import('./pages/Give.vue') },
-  { path: '/portal', name: 'Portal', component: () => import('./pages/Portal.vue') },
+  {
+    path: '/portal',
+    component: () => import('./components/PortalLayout.vue'),
+    children: [
+      { path: '', name: 'Portal', component: () => import('./pages/PortalHome.vue') },
+      { path: 'trips', name: 'Trips', component: () => import('./pages/Trips.vue') },
+      { path: ':module', name: 'Module', component: () => import('./pages/ModulePage.vue'), props: true },
+      {
+        path: ':module/:doctype/:name',
+        name: 'Record',
+        component: () => import('./pages/RecordPage.vue'),
+        props: true,
+      },
+    ],
+  },
+  // Trips moved into the Member Portal; keep old links working.
+  { path: '/trips', redirect: (to) => ({ path: '/portal/trips', hash: to.hash }) },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('./pages/NotFound.vue') },
 ]
 
 export default createRouter({
   history: createWebHistory('/missions'),
   routes,
-  scrollBehavior: (to, from, saved) => saved || { top: 0 },
+  // Trips scrolls to its own #trip once the list has loaded; other hashes are on the page already.
+  scrollBehavior: (to, from, saved) =>
+    saved || (to.hash ? (to.name === 'Trips' ? false : { el: to.hash, top: 88 }) : { top: 0 }),
 })

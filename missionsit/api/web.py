@@ -12,6 +12,7 @@ only that user's own records, matched by email.
 
 import frappe
 from frappe import _
+from frappe.rate_limiter import rate_limit
 
 UPCOMING_TRIP_STATUSES = ("Planning", "Open", "Full")
 
@@ -133,6 +134,90 @@ def get_portal() -> dict:
 		"pledges": pledges,
 		"applications": applications,
 	}
+
+
+# Fields a visitor may fill in on a church submission. Everything else (status, review, the
+# church it becomes) is set here or by the reviewer, never by the form.
+SUBMISSION_FIELDS = (
+	"church_name",
+	"pastor_name",
+	"affiliation",
+	"address_line",
+	"city",
+	"state_province",
+	"postal_code",
+	"country",
+	"phone",
+	"email",
+	"website",
+	"service_times",
+	"language",
+)
+MAX_CHURCHES_PER_SUBMISSION = 100
+
+
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+@rate_limit(limit=10, seconds=60 * 60)
+def submit_churches(churches, submitter_name=None, submitter_email=None, website_url=None) -> dict:
+	"""Add one church, or a list of them, to the directory's review queue. No sign-in needed.
+
+	Each church becomes a Church Submission in Pending Review; nothing reaches the directory
+	until a reviewer approves it. `website_url` is a honeypot: the form hides it from people, so
+	a value there means a bot filled the form, and the request is accepted and dropped.
+	"""
+	if website_url:
+		return {"received": 0}
+
+	if isinstance(churches, str):
+		churches = frappe.parse_json(churches)
+	if not isinstance(churches, list) or not churches:
+		frappe.throw(_("Add at least one church."))
+	if len(churches) > MAX_CHURCHES_PER_SUBMISSION:
+		frappe.throw(
+			_("Send at most {0} churches at a time. Split the list and send the rest after.").format(
+				MAX_CHURCHES_PER_SUBMISSION
+			)
+		)
+	if submitter_email and not frappe.utils.validate_email_address(submitter_email):
+		frappe.throw(_("{0} is not an email address.").format(submitter_email))
+
+	source = "List Upload" if len(churches) > 1 else "Single Submission"
+	batch = frappe.generate_hash(length=10) if len(churches) > 1 else None
+	received = 0
+	for row in churches:
+		if not isinstance(row, dict):
+			continue
+		values = {f: (str(row.get(f) or "").strip()[:140] or None) for f in SUBMISSION_FIELDS}
+		if not values["church_name"]:
+			continue
+		notes = []
+		# Country is a link; an unknown name would fail the insert, so keep it as a note instead.
+		if values["country"] and not frappe.db.exists("Country", values["country"]):
+			notes.append(_("Country given: {0}").format(values["country"]))
+			values["country"] = None
+		for field in ("email", "website"):
+			if values[field] and not (
+				frappe.utils.validate_email_address(values[field]) if field == "email" else values[field].startswith(("http://", "https://"))
+			):
+				notes.append(_("{0} given: {1}").format(field.title(), values[field]))
+				values[field] = None
+		frappe.get_doc(
+			{
+				"doctype": "Mit Directory Church Submission",
+				**values,
+				"status": "Pending Review",
+				"source": source,
+				"submission_batch": batch,
+				"submitter_name": (submitter_name or "").strip()[:140] or None,
+				"submitter_email": submitter_email or None,
+				"review_notes": "\n".join(notes) or None,
+			}
+		).insert(ignore_permissions=True)
+		received += 1
+
+	if not received:
+		frappe.throw(_("Every church needs a name."))
+	return {"received": received}
 
 
 # --- Helpers ---------------------------------------------------------------------------------

@@ -7,6 +7,13 @@ import frappeUIPreset, { content as frappeUIContent } from 'frappe-ui/tailwind'
 export default {
   presets: [frappeUIPreset],
   content: ['./index.html', './src/**/*.{vue,js,ts}', ...frappeUIContent],
+  // The portal names each module's icon at runtime (from the desk sidebars), so Tailwind cannot
+  // find these classes in the source. Keep this list in step with the sidebars' header icons.
+  safelist: [
+    'book-user', 'briefcase', 'chart-column', 'circle-dollar-sign', 'circle-help', 'globe',
+    'hands-praying', 'handshake', 'heart-handshake', 'luggage', 'mail', 'plane', 'settings',
+    'store', 'users', 'folder', 'heart',
+  ].map((icon) => `lucide-${icon}`),
   theme: {
     extend: {
       colors: {

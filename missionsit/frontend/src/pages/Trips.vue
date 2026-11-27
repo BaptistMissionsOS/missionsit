@@ -24,7 +24,7 @@ watch(
 </script>
 
 <template>
-  <div class="page pt-12">
+  <div>
     <div class="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
       <div>
         <h1 class="heading t-h1">Short-term trips</h1>

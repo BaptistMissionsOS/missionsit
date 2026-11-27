@@ -6,10 +6,13 @@ import DeparturesBoard from '@/components/DeparturesBoard.vue'
 import MissionaryList from '@/components/MissionaryList.vue'
 import GoalBar from '@/components/GoalBar.vue'
 import PageState from '@/components/PageState.vue'
-import { site, pageResource } from '@/data'
+import ChurchMap from '@/components/ChurchMap.vue'
+import { site, pageResource, directory, loadDirectory } from '@/data'
 import { links } from '@/utils'
 
 const home = pageResource('get_home')
+loadDirectory()
+const churches = computed(() => directory.data?.churches || [])
 
 // One plain sentence about the work, rather than a row of big numbers.
 const reach = computed(() => {
@@ -53,6 +56,27 @@ const reach = computed(() => {
         <RouterLink to="/missionaries" class="shrink-0 text-sm font-semibold text-airmail hover:underline">See everyone</RouterLink>
       </div>
       <MissionaryList :missionaries="data.missionaries" />
+    </section>
+
+    <section class="page pt-16" aria-labelledby="directory-home">
+      <div class="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <div>
+          <h2 id="directory-home" class="heading t-h2">Church Directory</h2>
+          <p class="t-lead mt-3 text-ink-soft">
+            Churches that welcome missionaries, on one map. Know one that is missing? Add it, or send a whole list, and our team checks each before it appears.
+          </p>
+          <p v-if="directory.data" class="mt-2 font-medium text-airmail">
+            {{ churches.length === 1 ? '1 church on the map' : `${churches.length} churches on the map` }}
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <RouterLink to="/directory" class="rounded-full bg-airmail px-5 py-3 text-sm font-semibold text-white hover:bg-airmail-dark">Open the directory</RouterLink>
+            <RouterLink :to="{ path: '/directory', hash: '#submit-title' }" class="rounded-full border border-ink/15 px-5 py-3 text-sm font-semibold hover:border-airmail hover:text-airmail">Add a church</RouterLink>
+          </div>
+        </div>
+        <RouterLink to="/directory" aria-label="Open the Church Directory map" class="block">
+          <ChurchMap :churches="churches" height="20rem" :interactive="false" />
+        </RouterLink>
+      </div>
     </section>
 
     <section v-if="data.pages.length || data.campaigns.length" class="page pt-16" aria-labelledby="give-home">

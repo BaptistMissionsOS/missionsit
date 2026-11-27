@@ -58,7 +58,7 @@ const profile = computed(() => res.data?.profile)
             <h2 class="heading t-h4">Go with {{ profile.display_name.split(' ')[0] }}</h2>
             <ul class="mt-3 grid gap-3">
               <li v-for="t in data.trips" :key="t.name">
-                <RouterLink :to="{ path: '/trips', hash: `#${encodeURIComponent(t.name)}` }" class="block hover:text-airmail">
+                <RouterLink :to="{ path: '/portal/trips', hash: `#${encodeURIComponent(t.name)}` }" class="block hover:text-airmail">
                   <span class="font-semibold">{{ t.name }}</span>
                   <span class="block text-sm text-ink-soft">{{ t.destination }}, {{ day(t.start_date) }}</span>
                 </RouterLink>
