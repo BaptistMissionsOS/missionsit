@@ -1,397 +1,880 @@
 /* This source code is freely given for the sake of the gospel (Matthew 10:8)
  * and is licensed under MIT No Attribution (MIT-0).
  *
- * Summary Home island — flat frappe-ui-style cards, calm colour, one accent.
+ * Overview island — airmail from the field.
+ *
+ * One bold thing: the airmail chevron border around the dispatch at the top. Everything
+ * else stays quiet: the desk's own surfaces, sentence-case headings, a ledger with dotted
+ * leaders instead of a wall of number tiles.
  */
 
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&display=swap");
+
 .mit-summary-home {
-	--sh-radius: 10px;
-	--sh-border: 1px solid var(--border-color, #e5e7eb);
-	--sh-bg: var(--card-bg, #ffffff);
-	--sh-bg-soft: #f6f8fb;
-	--sh-text: var(--text-color, #0f172a);
-	--sh-muted: var(--text-muted, #64748b);
-	--sh-primary: #2490ef;
-	--sh-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
-	--sh-shadow-hover: 0 4px 12px rgba(15, 23, 42, 0.08);
-	padding: 1.25rem 1.5rem 3rem;
-	color: var(--sh-text);
-	max-width: 1180px;
+	--ov-red: #c33a3a;
+	--ov-blue: #2d4e9c;
+	--ov-ink: #1e2840;
+	--ov-sage: #3e7a5c;
+	--ov-ochre: #b7862b;
+
+	--ov-surface: var(--card-bg, #ffffff);
+	--ov-page: var(--bg-color, #f8f8f8);
+	--ov-text: var(--text-color, #1f2328);
+	--ov-muted: var(--text-muted, #6b7280);
+	--ov-line: var(--border-color, #e4e6eb);
+	--ov-hover: var(--subtle-fg, #f3f4f6);
+	--ov-heading: var(--ov-ink);
+	--ov-display: "Bricolage Grotesque", var(--font-stack, "Inter", system-ui, sans-serif);
+
+	color: var(--ov-text);
+	max-width: 1120px;
+	margin: 0 auto;
+	padding: 8px 4px 56px;
 }
 
 [data-theme="dark"] .mit-summary-home,
 .theme-dark .mit-summary-home {
-	--sh-bg-soft: #1a1f2b;
-	--sh-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-	--sh-shadow-hover: 0 4px 14px rgba(0, 0, 0, 0.4);
+	--ov-red: #e06666;
+	--ov-blue: #7f98d1;
+	--ov-sage: #74b391;
+	--ov-heading: #e8ebf3;
 }
 
-.sh-stack {
+.ov {
 	display: flex;
 	flex-direction: column;
-	gap: 1.5rem;
+	gap: 40px;
 }
 
-.sh-verse {
-	padding: 0.65rem 0.95rem;
-	border-left: 3px solid var(--sh-primary);
-	background: var(--sh-bg-soft);
-	border-radius: 6px;
-	font-style: italic;
-	color: var(--sh-muted);
-	font-size: 0.9rem;
+/* --- The dispatch -------------------------------------------------------------------- */
+
+.ov-dispatch {
+	/* The airmail border: red and blue chevrons on paper, cut at 45 degrees. */
+	padding: 8px;
+	border-radius: 14px;
+	background: repeating-linear-gradient(
+		-45deg,
+		var(--ov-red) 0 14px,
+		var(--ov-surface) 14px 24px,
+		var(--ov-blue) 24px 38px,
+		var(--ov-surface) 38px 48px
+	);
+	animation: ov-arrive 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* --- Section --- */
-
-.sh-section {
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
-}
-
-.sh-section__title {
-	font-size: 0.78rem;
-	font-weight: 600;
-	margin: 0;
-	text-transform: uppercase;
-	letter-spacing: 0.06em;
-	color: var(--sh-muted);
-}
-
-/* --- Shared card --- */
-
-.sh-card {
-	background: var(--sh-bg);
-	border: var(--sh-border);
-	border-radius: var(--sh-radius);
-	box-shadow: var(--sh-shadow);
-	padding: 1rem 1.1rem;
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
-}
-
-.sh-card--rows {
-	padding: 0.25rem 0.25rem;
-	gap: 0;
-}
-
-.sh-card__title {
-	font-size: 0.95rem;
-	font-weight: 600;
-	margin: 0;
-}
-
-/* --- Module shortcut tiles --- */
-
-.sh-tiles {
+.ov-dispatch__paper {
+	background: var(--ov-surface);
+	border-radius: 8px;
+	padding: 28px 32px 30px;
 	display: grid;
-	gap: 0.75rem;
-	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 14px;
 }
 
-.sh-tile {
-	all: unset;
-	cursor: pointer;
+.ov-dispatch__top {
 	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 0.55rem;
-	padding: 0.9rem 0.95rem;
-	background: var(--sh-bg);
-	border: var(--sh-border);
-	border-radius: var(--sh-radius);
-	box-shadow: var(--sh-shadow);
-	transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 4px 16px;
 }
 
-.sh-tile:hover {
-	transform: translateY(-2px);
-	border-color: var(--sh-primary);
-	box-shadow: var(--sh-shadow-hover);
+.ov-dispatch__hello,
+.ov-dispatch__date {
+	margin: 0;
+	font-size: 15px;
+	color: var(--ov-muted);
 }
 
-.sh-tile:focus-visible {
-	outline: 2px solid var(--sh-primary);
-	outline-offset: 2px;
-}
-
-.sh-tile__icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 36px;
-	height: 36px;
-	border-radius: 9px;
-}
-
-.sh-tile__icon svg {
-	width: 20px;
-	height: 20px;
-}
-
-.sh-tile__label {
-	font-size: 0.88rem;
+.ov-dispatch__headline {
+	margin: 0;
+	font-family: var(--ov-display);
 	font-weight: 600;
-	color: var(--sh-text);
-	line-height: 1.2;
+	font-size: clamp(28px, 4.2vw, 44px);
+	line-height: 1.08;
+	letter-spacing: -0.02em;
+	color: var(--ov-heading);
+	max-width: 22ch;
 }
 
-.sh-tile--blue .sh-tile__icon {
-	background: rgba(36, 144, 239, 0.12);
-	color: #2490ef;
-}
-.sh-tile--orange .sh-tile__icon {
-	background: rgba(245, 158, 11, 0.14);
-	color: #d97706;
-}
-.sh-tile--amber .sh-tile__icon {
-	background: rgba(234, 179, 8, 0.15);
-	color: #b45309;
-}
-.sh-tile--indigo .sh-tile__icon {
-	background: rgba(99, 102, 241, 0.14);
-	color: #4f46e5;
-}
-.sh-tile--emerald .sh-tile__icon {
-	background: rgba(16, 185, 129, 0.14);
-	color: #059669;
-}
-.sh-tile--sky .sh-tile__icon {
-	background: rgba(14, 165, 233, 0.14);
-	color: #0284c7;
-}
-.sh-tile--red .sh-tile__icon {
-	background: rgba(239, 68, 68, 0.12);
-	color: #dc2626;
+.ov-dispatch__verse {
+	margin: 6px 0 0;
+	padding: 0;
+	border: 0;
+	max-width: 64ch;
+	font-size: 15px;
+	line-height: 1.6;
+	color: var(--ov-muted);
 }
 
-/* --- Number cards (At a Glance) --- */
-
-.sh-numbers {
+/* Support level: one line inside the dispatch. Promised support shows as a paler run past the fill. */
+.ov-support {
 	display: grid;
-	gap: 0.75rem;
-	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	gap: 8px;
+	max-width: 640px;
+	margin-top: 4px;
 }
 
-.sh-number {
-	all: unset;
-	cursor: pointer;
+.ov-support__line {
 	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-	padding: 1rem 1.1rem;
-	background: var(--sh-bg);
-	border: var(--sh-border);
-	border-radius: var(--sh-radius);
-	box-shadow: var(--sh-shadow);
-	transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 2px 16px;
 }
 
-.sh-number:hover {
-	transform: translateY(-1px);
-	border-color: var(--sh-primary);
-	box-shadow: var(--sh-shadow-hover);
-}
-
-.sh-number:focus-visible {
-	outline: 2px solid var(--sh-primary);
-	outline-offset: 2px;
-}
-
-.sh-number__label {
-	font-size: 0.75rem;
-	color: var(--sh-muted);
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
-	font-weight: 500;
-}
-
-.sh-number__value {
-	font-size: 1.85rem;
+.ov-support__label {
+	margin: 0;
+	font-size: 15px;
 	font-weight: 600;
-	line-height: 1;
+	color: var(--ov-heading);
+}
+
+.ov-support__amounts {
+	margin: 0;
+	font-size: 14px;
 	font-variant-numeric: tabular-nums;
-	color: var(--sh-text);
+	color: var(--ov-muted);
 }
 
-/* --- Row list (Needs Attention, Website) --- */
-
-.sh-row,
-.sh-web {
-	all: unset;
-	cursor: pointer;
-	display: grid;
-	grid-template-columns: auto 1fr auto auto;
-	align-items: center;
-	gap: 0.85rem;
-	padding: 0.7rem 0.85rem;
-	border-radius: 8px;
-	transition: background 120ms ease;
-}
-
-.sh-row + .sh-row,
-.sh-web + .sh-web {
-	border-top: var(--sh-border);
-	border-radius: 0;
-}
-
-.sh-card--rows > :first-child {
-	border-top-left-radius: var(--sh-radius);
-	border-top-right-radius: var(--sh-radius);
-}
-
-.sh-card--rows > :last-child {
-	border-bottom-left-radius: var(--sh-radius);
-	border-bottom-right-radius: var(--sh-radius);
-}
-
-.sh-row:hover,
-.sh-web:hover {
-	background: var(--sh-bg-soft);
-}
-
-.sh-row:focus-visible,
-.sh-web:focus-visible {
-	outline: 2px solid var(--sh-primary);
-	outline-offset: -2px;
-}
-
-.sh-row__icon,
-.sh-web__icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 30px;
-	height: 30px;
-	border-radius: 8px;
-	background: rgba(36, 144, 239, 0.12);
-	color: #2490ef;
-}
-
-.sh-row--blue .sh-row__icon {
-	background: rgba(36, 144, 239, 0.12);
-	color: #2490ef;
-}
-.sh-row--orange .sh-row__icon {
-	background: rgba(245, 158, 11, 0.14);
-	color: #d97706;
-}
-.sh-row--amber .sh-row__icon {
-	background: rgba(234, 179, 8, 0.15);
-	color: #b45309;
-}
-.sh-row--indigo .sh-row__icon {
-	background: rgba(99, 102, 241, 0.14);
-	color: #4f46e5;
-}
-.sh-row--emerald .sh-row__icon {
-	background: rgba(16, 185, 129, 0.14);
-	color: #059669;
-}
-.sh-row--sky .sh-row__icon {
-	background: rgba(14, 165, 233, 0.14);
-	color: #0284c7;
-}
-.sh-row--red .sh-row__icon {
-	background: rgba(239, 68, 68, 0.12);
-	color: #dc2626;
-}
-
-.sh-row__icon svg,
-.sh-web__icon svg {
-	width: 16px;
-	height: 16px;
-}
-
-.sh-row__label,
-.sh-web__label {
-	font-size: 0.9rem;
-	color: var(--sh-text);
+.ov-support__track {
+	position: relative;
+	height: 10px;
+	border-radius: 999px;
+	background: var(--ov-hover);
 	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
-.sh-row__count,
-.sh-web__count {
-	font-size: 0.95rem;
+.ov-support__promised,
+.ov-support__fill {
+	position: absolute;
+	inset: 0 auto 0 0;
+	border-radius: inherit;
+}
+
+.ov-support__promised {
+	background: color-mix(in srgb, var(--ov-blue) 28%, transparent);
+}
+
+.ov-support__fill {
+	background: var(--ov-blue);
+}
+
+.ov-support__note {
+	margin: 0;
+	font-size: 13px;
+	color: var(--ov-muted);
+}
+
+@keyframes ov-arrive {
+	from {
+		opacity: 0;
+		transform: translateY(6px) rotate(-0.4deg);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* --- Shared headings ----------------------------------------------------------------- */
+
+.ov-heading {
+	margin: 0 0 12px;
+	font-family: var(--ov-display);
 	font-weight: 600;
-	font-variant-numeric: tabular-nums;
-	color: var(--sh-text);
-	min-width: 1.5rem;
-	text-align: right;
+	font-size: 20px;
+	letter-spacing: -0.01em;
+	color: var(--ov-heading);
 }
 
-.sh-row__chev {
-	color: var(--sh-muted);
-	display: inline-flex;
+.ov-subheading {
+	margin: 24px 0 6px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--ov-muted);
 }
 
-.sh-row__chev svg {
-	width: 14px;
-	height: 14px;
-}
-
-/* --- Charts (Trends) --- */
-
-.sh-charts {
+.ov-columns {
 	display: grid;
-	gap: 0.85rem;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+	gap: 40px;
+	align-items: start;
 }
 
-.sh-chart-host {
-	width: 100%;
-	min-height: 240px;
-}
-
-.sh-chart-host .frappe-chart {
+.ov-block ul {
+	list-style: none;
+	margin: 0;
 	padding: 0;
 }
 
-.sh-chart-host .frappe-chart .title {
-	display: none;
+/* --- Waiting on you ------------------------------------------------------------------ */
+
+.ov-wait-list {
+	border-top: 1px solid var(--ov-line);
 }
 
-/* --- Empty, loading, error --- */
-
-.sh-empty {
-	color: var(--sh-muted);
-	text-align: center;
-	padding: 1rem 0;
-	margin: 0;
-	font-size: 0.85rem;
+.ov-wait {
+	border-bottom: 1px solid var(--ov-line);
 }
 
-.sh-loading,
-.sh-error {
-	padding: 3rem 1rem;
-	text-align: center;
-	color: var(--sh-muted);
-}
-
-.sh-error {
-	color: var(--sh-text);
-}
-
-.sh-button {
+.ov-wait__button {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 64px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 16px;
+	padding: 14px 8px;
+	border: 0;
+	background: none;
+	color: inherit;
+	text-align: left;
 	cursor: pointer;
-	margin-top: 0.75rem;
-	padding: 0.4rem 0.9rem;
 	border-radius: 6px;
-	border: var(--sh-border);
-	background: var(--sh-bg);
+}
+
+.ov-wait__button:hover {
+	background: var(--ov-hover);
+}
+
+.ov-wait__count {
+	font-family: var(--ov-display);
+	font-weight: 700;
+	font-size: 30px;
+	line-height: 1;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ov-red);
+	text-align: right;
+}
+
+.ov-wait__label {
+	font-size: 15px;
 	font-weight: 500;
 }
 
-.sh-button:hover {
-	border-color: var(--sh-primary);
-	color: var(--sh-primary);
+.ov-wait__icon {
+	color: var(--ov-muted);
+	display: inline-flex;
 }
 
-.mit-summary-error {
-	padding: 1.5rem;
-	color: var(--sh-text);
+.ov-clear {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+	margin: 14px 0 0;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--ov-muted);
+}
+
+.ov-clear__mark {
+	display: inline-flex;
+	color: var(--ov-sage);
+	padding-top: 2px;
+}
+
+.ov-quiet {
+	margin: 0;
+	font-size: 14px;
+	color: var(--ov-muted);
+}
+
+/* --- Prayer wall -------------------------------------------------------------------- */
+
+.ov-prayer-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--ov-line);
+}
+
+/* A thin airmail-red rule marks what is still being prayed for; answered ones turn sage. */
+.ov-prayer {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto;
+	align-items: center;
+	gap: 4px 14px;
+	padding: 8px 0 8px 12px;
+	border-bottom: 1px solid var(--ov-line);
+	box-shadow: inset 3px 0 0 var(--ov-red);
+}
+
+.ov-prayer--answered {
+	grid-template-columns: minmax(0, 1fr) auto;
+	box-shadow: inset 3px 0 0 var(--ov-sage);
+}
+
+.ov-prayer__open {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	min-width: 0;
+	padding: 4px 6px;
+	margin-left: -6px;
+	border: 0;
+	border-radius: 6px;
+	background: none;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.ov-prayer__open:hover {
+	background: var(--ov-hover);
+}
+
+.ov-prayer__title {
+	flex: 0 1 auto;
+	min-width: 0;
+	font-size: 14px;
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ov-prayer__meta {
+	flex: 0 100 auto;
+	min-width: 0;
+	font-size: 13px;
+	color: var(--ov-muted);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ov-prayer__days {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	color: var(--ov-muted);
+	white-space: nowrap;
+}
+
+.ov-prayer--answered .ov-prayer__days {
+	color: var(--ov-sage);
+	font-weight: 500;
+}
+
+.ov-prayer__answer {
+	padding: 2px 10px;
+	border: 1px solid var(--ov-line);
+	border-radius: 999px;
+	background: var(--ov-surface);
+	color: var(--ov-blue);
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.ov-prayer__answer:hover {
+	border-color: var(--ov-blue);
+}
+
+.ov-prayer__answer:disabled {
+	opacity: 0.6;
+	cursor: progress;
+}
+
+.ov-prayers__links {
+	display: flex;
+	gap: 16px;
+	margin: 12px 0 0;
+}
+
+.ov-link {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--ov-blue);
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.ov-link:hover {
+	text-decoration: underline;
+}
+
+/* --- Coming up ---------------------------------------------------------------------- */
+
+.ov-main {
+	display: grid;
+	gap: 40px;
+}
+
+.ov-cal__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px 16px;
+	margin-bottom: 12px;
+}
+
+.ov-cal__heading {
+	margin: 0;
+}
+
+.ov-switch--small .ov-switch__option {
+	font-size: 13px;
+	padding: 3px 11px;
+}
+
+/* Filter chips: outlined until chosen, each with how many it holds. */
+.ov-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 12px;
+}
+
+.ov-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 6px 3px 11px;
+	border: 1px solid var(--ov-line);
+	border-radius: 999px;
+	background: none;
+	color: var(--ov-text);
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.ov-chip:hover {
+	border-color: var(--ov-blue);
+}
+
+.ov-chip__count {
+	min-width: 20px;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: var(--ov-hover);
+	color: var(--ov-muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+}
+
+.ov-chip.is-on {
+	border-color: var(--ov-blue);
+	background: color-mix(in srgb, var(--ov-blue) 10%, transparent);
+	color: var(--ov-blue);
+	font-weight: 600;
+}
+
+.ov-chip.is-on .ov-chip__count {
+	background: var(--ov-blue);
+	color: var(--ov-surface);
+}
+
+.ov-cal__body {
+	transition: opacity 150ms ease;
+}
+
+.ov-cal__body.is-loading {
+	opacity: 0.55;
+}
+
+.ov-cal__days {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--ov-line);
+}
+
+.ov-cal__days--later {
+	margin-top: 12px;
+}
+
+/* One row per day: the date on the left, that day's items stacked beside it. */
+.ov-cal__day {
+	display: grid;
+	grid-template-columns: 96px minmax(0, 1fr);
+	gap: 12px;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--ov-line);
+}
+
+.ov-cal__date {
+	padding: 7px 0 0 8px;
+	font-size: 14px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	color: var(--ov-blue);
+}
+
+.ov-cal__days--later .ov-cal__date {
+	color: var(--ov-muted);
+}
+
+.ov-cal__items {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 2px;
+}
+
+/* The action sits right after its item, not at the far edge of a full-width row. */
+.ov-cal__item {
+	display: grid;
+	grid-template-columns: 20px minmax(0, max-content) auto;
+	justify-content: start;
+	align-items: center;
+	gap: 10px 16px;
+	min-height: 36px;
+}
+
+.ov-cal__icon {
+	display: inline-flex;
+	color: var(--ov-muted);
+}
+
+.ov-cal__open {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 2px 10px;
+	min-width: 0;
+	padding: 6px 8px;
+	margin-left: -8px;
+	border: 0;
+	border-radius: 6px;
+	background: none;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.ov-cal__open:hover {
+	background: var(--ov-hover);
+}
+
+.ov-cal__title {
+	font-size: 15px;
+	font-weight: 500;
+}
+
+.ov-cal__kind {
+	font-size: 13px;
+	color: var(--ov-muted);
+}
+
+.ov-cal__action,
+.ov-cal__done {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	white-space: nowrap;
+}
+
+.ov-cal__action {
+	padding: 4px 10px;
+	border: 1px solid var(--ov-line);
+	border-radius: 999px;
+	background: var(--ov-surface);
+	color: var(--ov-blue);
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.ov-cal__action:hover {
+	border-color: var(--ov-blue);
+}
+
+.ov-cal__action:disabled {
+	opacity: 0.6;
+	cursor: progress;
+}
+
+.ov-cal__done {
+	padding: 4px 4px 4px 10px;
+	color: var(--ov-sage);
+}
+
+/* --- Support ledger ------------------------------------------------------------------ */
+
+.ov-block--ledger {
+	background: var(--ov-surface);
+	border: 1px solid var(--ov-line);
+	border-radius: 10px;
+	padding: 20px 20px 16px;
+}
+
+.ov-ledger__button {
+	width: 100%;
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	padding: 7px 6px;
+	margin: 0 -6px;
+	border: 0;
+	background: none;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
+	border-radius: 4px;
+	box-sizing: content-box;
+}
+
+.ov-ledger__button:hover {
+	background: var(--ov-hover);
+}
+
+.ov-ledger__label {
+	font-size: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ov-ledger__leader {
+	flex: 1;
+	min-width: 16px;
+	border-bottom: 1.5px dotted var(--ov-line);
+	transform: translateY(-4px);
+}
+
+.ov-ledger__value {
+	font-family: var(--ov-display);
+	font-weight: 600;
+	font-size: 17px;
+	font-variant-numeric: tabular-nums;
+	color: var(--ov-heading);
+}
+
+/* --- Trends -------------------------------------------------------------------------- */
+
+.ov-trends__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px 16px;
+	margin-bottom: 12px;
+}
+
+.ov-trends__heading {
+	margin: 0 8px 0 0;
+}
+
+/* The subject switch: one control, the chosen option filled in airmail blue. */
+.ov-switch {
+	display: inline-flex;
+	padding: 3px;
+	gap: 2px;
+	border: 1px solid var(--ov-line);
+	border-radius: 999px;
+	background: var(--ov-surface);
+}
+
+.ov-switch__option {
+	border: 0;
+	background: none;
+	color: var(--ov-muted);
+	font-size: 14px;
+	font-weight: 500;
+	padding: 5px 14px;
+	border-radius: 999px;
+	cursor: pointer;
+}
+
+.ov-switch__option:hover {
+	color: var(--ov-text);
+}
+
+.ov-switch__option.is-on {
+	background: var(--ov-blue);
+	color: var(--ov-surface);
+}
+
+.ov-trends__view {
+	margin: 0 0 0 auto;
+}
+
+.ov-select {
+	min-width: 220px;
+	height: 32px;
+	border-radius: 8px;
+}
+
+.ov-trends__panel {
+	background: var(--ov-surface);
+	border: 1px solid var(--ov-line);
+	border-radius: 10px;
+	padding: 20px 20px 8px;
+	transition: opacity 150ms ease;
+}
+
+.ov-trends__panel.is-loading {
+	opacity: 0.55;
+}
+
+.ov-trends__summary {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 10px;
+	margin: 0 0 4px;
+	color: var(--ov-muted);
+	font-size: 14px;
+}
+
+.ov-trends__total {
+	font-family: var(--ov-display);
+	font-weight: 600;
+	font-size: 26px;
+	letter-spacing: -0.01em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ov-heading);
+}
+
+.ov-trends__empty {
+	margin: 8px 0 20px;
+	font-size: 14px;
+	color: var(--ov-muted);
+}
+
+/* --- Modules ------------------------------------------------------------------------- */
+
+.ov-modules__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.ov-module {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 14px 8px 10px;
+	border: 1px solid var(--ov-line);
+	border-radius: 999px;
+	background: var(--ov-surface);
+	color: inherit;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.ov-module:hover {
+	border-color: var(--ov-blue);
+	color: var(--ov-blue);
+}
+
+.ov-module__icon {
+	display: inline-flex;
+	color: var(--ov-muted);
+}
+
+.ov-module:hover .ov-module__icon {
+	color: inherit;
+}
+
+/* --- States -------------------------------------------------------------------------- */
+
+.ov-status {
+	padding: 48px 0;
+	text-align: center;
+	color: var(--ov-muted);
+	font-size: 15px;
+}
+
+.ov-status--error p {
+	margin-bottom: 12px;
+	color: var(--ov-red);
+}
+
+/* --- Focus, motion, small screens ---------------------------------------------------- */
+
+.mit-summary-home button:focus-visible {
+	outline: 2px solid var(--ov-blue);
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ov-dispatch {
+		animation: none;
+	}
+}
+
+@media (max-width: 860px) {
+	.ov-columns {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 32px;
+	}
+}
+
+@media (max-width: 560px) {
+	.ov {
+		gap: 32px;
+	}
+
+	.ov-dispatch {
+		padding: 6px;
+	}
+
+	.ov-dispatch__paper {
+		padding: 20px 18px 22px;
+	}
+
+	.ov-wait__button {
+		grid-template-columns: 48px minmax(0, 1fr) auto;
+		gap: 12px;
+	}
+
+	.ov-wait__count {
+		font-size: 24px;
+	}
+
+	.ov-prayer {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+
+	.ov-prayer__open {
+		grid-column: 1 / -1;
+	}
+
+	.ov-cal__day {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2px;
+	}
+
+	.ov-cal__date {
+		padding: 0 0 0 4px;
+	}
+
+	.ov-cal__item {
+		grid-template-columns: 18px minmax(0, 1fr);
+	}
+
+	.ov-cal__action,
+	.ov-cal__done {
+		grid-column: 2;
+		justify-self: start;
+		margin-bottom: 6px;
+	}
+
+	.ov-trends__view,
+	.ov-select {
+		width: 100%;
+		margin: 0;
+	}
+
+	.ov-trends__panel {
+		padding: 16px 12px 4px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ov-trends__panel,
+	.ov-cal__body {
+		transition: none;
+	}
 }

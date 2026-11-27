@@ -39,7 +39,7 @@ class MitFinancesRecurringDonation(Document):
 def advance_due_recurring_donations():
 	"""Scheduled daily job: nudge Recurring Donations whose next_payment_date has passed."""
 	due = frappe.get_all(
-		"Recurring Donation",
+		"Mit Finances Recurring Donation",
 		filters={"status": "Active", "next_payment_date": ["<=", today()]},
 		pluck="name",
 	)

@@ -68,7 +68,7 @@ def _resource_pins(filters=None, summary=False):
 	fields = ["name", "church", "city", "country", "status", "schedule"] if summary else []
 	grouped = {}
 	for listing in frappe.get_all(
-		"Marketplace Listing",
+		"Mit Marketplace Listing",
 		filters=filters or {},
 		fields=["listing_title", "listing_type", "location"] + fields,
 	):
@@ -93,7 +93,7 @@ def get_public_map_pins():
 	never appears on the public map.
 	"""
 	return {
-		"churches": _pins("Church", "church_name", {"status": "Active"}),
+		"churches": _pins("Mit Directory Church", "church_name", {"status": "Active"}),
 		"resources": _resource_pins({"status": "Active"}),
 	}
 
@@ -122,7 +122,7 @@ def get_missionary_map(view="all"):
 		view = "all"
 	filters = {"status": "Active"} if view == "active" else {}
 	churches = _pins(
-		"Church",
+		"Mit Directory Church",
 		"church_name",
 		filters,
 		fields=[
@@ -144,8 +144,8 @@ def get_missionary_map(view="all"):
 		churches = [c for c in churches if not c.get("last_verified")]
 	accommodations = {}
 	for row in frappe.get_all(
-		"Church Accommodation",
-		filters={"parenttype": "Church"},
+		"Mit Directory Church Accommodation",
+		filters={"parenttype": "Mit Directory Church"},
 		fields=["parent", "accommodation_type"],
 	):
 		accommodations.setdefault(row.parent, []).append(row.accommodation_type)
