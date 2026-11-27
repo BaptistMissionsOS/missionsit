@@ -101,19 +101,53 @@ const ATTRIBUTION =
 let base = null
 let baseStyle = null
 
+// MapLibre draws with the graphics card. A browser without graphics acceleration draws WebGL on
+// the CPU instead, and vector tiles are then slow enough to draw that the map seems to stop
+// redrawing after a zoom. Ask the browser first: with failIfMajorPerformanceCaveat it gives no
+// context when it would draw on the CPU, and the map uses raster tiles, which are light to draw.
+// ?map=vector or ?map=raster in the address bar overrides this, for comparing the two.
+const SOFTWARE_RENDERER = /swiftshader|llvmpipe|lavapipe|softpipe|software|basic render/i
+
+function drawsFast() {
+  const forced = new URLSearchParams(window.location.search).get('map')
+  if (forced === 'vector') return true
+  if (forced === 'raster') return false
+  try {
+    const canvas = document.createElement('canvas')
+    const attrs = { failIfMajorPerformanceCaveat: true }
+    const gl = canvas.getContext('webgl2', attrs) || canvas.getContext('webgl', attrs)
+    if (!gl) return false
+    // Not every browser counts a software renderer as a caveat, so check its name as well.
+    const info = gl.getExtension('WEBGL_debug_renderer_info')
+    const renderer = String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER))
+    gl.getExtension('WEBGL_lose_context')?.loseContext()
+    return !SOFTWARE_RENDERER.test(renderer)
+  } catch {
+    return false
+  }
+}
+
+function rasterBase() {
+  return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    noWrap: true,
+    bounds: WORLD,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  })
+}
+
 function setBase(style) {
   if (!map || !style || style === baseStyle) return
   base?.remove()
   baseStyle = style
+  if (!drawsFast()) {
+    base = rasterBase().addTo(map)
+    return
+  }
   try {
     base = L.maplibreGL({ style, attribution: ATTRIBUTION, interactive: false }).addTo(map)
   } catch {
-    base = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      noWrap: true,
-      bounds: WORLD,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map)
+    base = rasterBase().addTo(map)
   }
 }
 
