@@ -17,21 +17,17 @@ import {
 	onBeforeUnmount,
 	ref,
 	watch,
+	nextTick,
 } from "https://esm.sh/vue@3.5.13";
 
 const API = "missionsit.mit_summary.page.overview.overview.get_dashboard";
+const TREND_API = "missionsit.mit_summary.page.overview.overview.get_trend";
 
-// Airmail blue, airmail red, sage, ochre, ink, then softer tints of the same.
-const CHART_COLORS = ["#2D4E9C", "#C33A3A", "#3E7A5C", "#B7862B", "#5A6680", "#7F98D1", "#E08A8A"];
-
-const CHART_TYPE_MAP = {
-	Line: "line",
-	Bar: "bar",
-	Percentage: "percentage",
-	Pie: "pie",
-	Donut: "donut",
-	Heatmap: "heatmap",
-};
+// Airmail blue for every trend: one series at a time needs one colour, and no legend. Read from
+// the stylesheet so dark mode gets its lighter blue.
+function chartColor(el) {
+	return getComputedStyle(el).getPropertyValue("--ov-blue").trim() || "#2D4E9C";
+}
 
 function formatNumber(value) {
 	if (value === null || value === undefined || value === "") return "0";
@@ -246,44 +242,129 @@ const LedgerLine = {
 	},
 };
 
-const ChartPanel = {
-	props: { chart: Object },
+// One chart for every trend. A switch picks the subject (donations, pledges, trips) and a
+// dropdown picks how to slice it; each view is fetched once and kept.
+const TrendPanel = {
+	props: { menu: Array },
 	setup(props) {
+		const subject = ref(props.menu[0]?.key);
+		const view = ref(props.menu[0]?.views[0]?.key);
+		const trend = ref(null);
+		const loading = ref(false);
+		const failed = ref("");
 		const host = ref(null);
-		const empty = ref(false);
+		const cache = new Map();
 
-		function render() {
+		const views = computed(() => props.menu.find((m) => m.key === subject.value)?.views || []);
+		const empty = computed(() => trend.value && !trend.value.values.some((v) => v));
+
+		function amount(value) {
+			const t = trend.value;
+			if (t?.money) return money(value, t.currency);
+			return formatNumber(value);
+		}
+
+		function draw() {
 			if (!host.value) return;
 			host.value.innerHTML = "";
-			const labels = props.chart.labels || [];
-			const datasets = props.chart.datasets || [];
-			empty.value = !(labels.length && datasets.some((d) => (d.values || []).some((v) => v)));
-			if (empty.value || !window.frappe?.Chart) return;
-			const type = CHART_TYPE_MAP[props.chart.type] || "bar";
+			const t = trend.value;
+			if (!t || empty.value || !window.frappe?.Chart) return;
 			new frappe.Chart(host.value, {
-				data: { labels, datasets },
-				type,
-				// A pie's legend wraps beneath it on narrow screens, so give it room.
-				height: ["pie", "donut", "percentage"].includes(type) ? 260 : 220,
-				colors: CHART_COLORS,
-				axisOptions: { xAxisMode: "tick", xIsSeries: type === "line" },
-				barOptions: { spaceRatio: 0.45 },
-				truncateLegends: true,
+				data: { labels: t.labels, datasets: [{ name: "", values: t.values }] },
+				type: t.type === "line" ? "line" : "bar",
+				height: 260,
+				colors: [chartColor(host.value)],
+				axisOptions: { xAxisMode: "tick", xIsSeries: t.type === "line", shortenYAxisNumbers: t.money ? 1 : 0 },
+				// Few categories make very wide bars, so space them out.
+				barOptions: { spaceRatio: t.labels.length <= 4 ? 0.75 : 0.5 },
+				lineOptions: { regionFill: 1, dotSize: 4 },
+				tooltipOptions: { formatTooltipY: (v) => amount(v) },
 			});
 		}
 
-		onMounted(render);
-		watch(() => props.chart, render, { deep: true });
+		async function load() {
+			const key = `${subject.value}:${view.value}`;
+			failed.value = "";
+			if (cache.has(key)) {
+				trend.value = cache.get(key);
+				return;
+			}
+			loading.value = true;
+			try {
+				const data = await frappe.xcall(TREND_API, { subject: subject.value, view: view.value }, "GET");
+				cache.set(key, data);
+				// Only show it if the reader has not moved on while it loaded.
+				if (key === `${subject.value}:${view.value}`) trend.value = data;
+			} catch (err) {
+				failed.value = err.message || String(err);
+			} finally {
+				loading.value = false;
+			}
+		}
+
+		function pickSubject(key) {
+			if (key === subject.value) return;
+			subject.value = key;
+			view.value = views.value[0]?.key;
+		}
+
+		watch([subject, view], load);
+		watch(trend, () => nextTick(draw));
+		onMounted(load);
 		onBeforeUnmount(() => host.value && (host.value.innerHTML = ""));
 
-		return () =>
-			h("figure", { class: "ov-chart" }, [
-				h("figcaption", { class: "ov-chart__title" }, props.chart.label),
-				h("div", { class: "ov-chart__host", ref: host, hidden: empty.value }),
-				empty.value
-					? h("p", { class: "ov-chart__empty" }, __("Nothing recorded yet."))
-					: null,
+		return () => {
+			const current = views.value.find((v) => v.key === view.value);
+			return h("section", { class: "ov-block ov-trends", "aria-labelledby": "ov-trends" }, [
+				h("div", { class: "ov-trends__bar" }, [
+					h("h2", { class: "ov-heading ov-trends__heading", id: "ov-trends" }, __("Trends")),
+					h(
+						"div",
+						{ class: "ov-switch", role: "radiogroup", "aria-label": __("Show trends for") },
+						props.menu.map((m) =>
+							h(
+								"button",
+								{
+									key: m.key,
+									type: "button",
+									role: "radio",
+									"aria-checked": String(m.key === subject.value),
+									class: ["ov-switch__option", m.key === subject.value && "is-on"],
+									onClick: () => pickSubject(m.key),
+								},
+								__(m.label),
+							),
+						),
+					),
+					h("label", { class: "ov-trends__view" }, [
+						h("span", { class: "sr-only" }, __("View")),
+						h(
+							"select",
+							{
+								class: "form-control input-sm ov-select",
+								value: view.value,
+								onChange: (e) => (view.value = e.target.value),
+							},
+							views.value.map((v) => h("option", { key: v.key, value: v.key }, __(v.label))),
+						),
+					]),
+				]),
+				h("div", { class: ["ov-trends__panel", loading.value && "is-loading"] }, [
+					trend.value && !empty.value
+						? h("p", { class: "ov-trends__summary" }, [
+								h("span", { class: "ov-trends__total" }, amount(trend.value.total)),
+								h("span", {}, current ? __(current.total) : ""),
+						  ])
+						: null,
+					failed.value
+						? h("p", { class: "ov-trends__empty" }, __("This trend could not load: {0}", [failed.value]))
+						: empty.value
+						? h("p", { class: "ov-trends__empty" }, __("Nothing recorded yet."))
+						: null,
+					h("div", { class: "ov-trends__host", ref: host, hidden: !!(empty.value || failed.value) }),
+				]),
 			]);
+		};
 	},
 };
 
@@ -296,7 +377,7 @@ const App = {
 			shortcuts: [],
 			attention: [],
 			cards: [],
-			charts: [],
+			trends: [],
 			website: {},
 			loading: true,
 			error: "",
@@ -313,7 +394,7 @@ const App = {
 					shortcuts: data.shortcuts || [],
 					attention: data.attention || [],
 					cards: data.cards || [],
-					charts: data.charts || [],
+					trends: data.trends || [],
 					website: data.website || {},
 				});
 			} catch (err) {
@@ -426,16 +507,7 @@ const App = {
 					]),
 				]),
 
-				state.charts.length
-					? h("section", { class: "ov-block", "aria-labelledby": "ov-trends" }, [
-							h("h2", { class: "ov-heading", id: "ov-trends" }, __("Trends")),
-							h(
-								"div",
-								{ class: "ov-charts" },
-								state.charts.map((chart) => h(ChartPanel, { chart, key: chart.name })),
-							),
-					  ])
-					: null,
+				state.trends.length ? h(TrendPanel, { menu: state.trends }) : null,
 
 				state.shortcuts.length
 					? h("nav", { class: "ov-modules", "aria-label": __("Modules") }, [

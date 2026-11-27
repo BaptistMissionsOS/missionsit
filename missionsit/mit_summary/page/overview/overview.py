@@ -7,10 +7,7 @@ Sections, in order: support level, work waiting on the reader, the support ledge
 cards and website counts), what is coming up in the next fortnight, trends, module links.
 """
 
-import json
-
 import frappe
-from frappe.desk.doctype.dashboard_chart.dashboard_chart import get as get_chart_data
 from frappe.desk.doctype.number_card.number_card import get_result as get_card_result
 
 INTRO_VERSE = (
@@ -29,12 +26,6 @@ CARDS = [
 	"Prayer Letters Sent",
 	"Churches in Rolodex",
 	"Missionary",
-]
-
-CHARTS = [
-	"Donations by Fund",
-	"Trips by Status",
-	"Pledges by Status",
 ]
 
 
@@ -111,7 +102,7 @@ def get_dashboard() -> dict:
 		"shortcuts": get_shortcuts(),
 		"attention": get_attention(),
 		"cards": [card_payload(name) for name in CARDS if frappe.db.exists("Number Card", name)],
-		"charts": [chart_payload(name) for name in CHARTS if frappe.db.exists("Dashboard Chart", name)],
+		"trends": TRENDS_MENU,
 		"website": get_website(),
 	}
 
@@ -289,24 +280,205 @@ def card_payload(name: str) -> dict:
 	}
 
 
-def chart_payload(name: str) -> dict:
-	"""*name*'s labels and datasets, for rendering with frappe.Chart in the island."""
-	doc = frappe.get_doc("Dashboard Chart", name)
-	try:
-		# Frappe's cache_source wrapper drops chart_name on no_cache calls,
-		# so pass a serialized doc that it can parse without re-fetching.
-		result = get_chart_data(chart=json.dumps(doc.as_dict(convert_dates_to_str=True)), no_cache=1) or {}
-	except Exception:
-		frappe.log_error(title=f"Summary Home chart {name}")
-		result = {}
-	return {
-		"name": doc.name,
-		"label": doc.name,
-		"type": doc.type,
-		"document_type": doc.document_type,
-		"labels": result.get("labels", []),
-		"datasets": result.get("datasets") or [],
+# The trends the page can draw: subject, then the ways to slice it. The first view of the first
+# subject is what the page opens on.
+TRENDS_MENU = [
+	{
+		"key": "donations",
+		"label": "Donations",
+		"views": [
+			{"key": "month", "label": "Given each month", "total": "given in the last 12 months"},
+			{"key": "fund", "label": "Given by fund", "total": "given in the last 12 months"},
+			{"key": "method", "label": "Given by payment method", "total": "given in the last 12 months"},
+			{"key": "givers", "label": "Givers each month", "total": "people gave in the last 12 months"},
+		],
+	},
+	{
+		"key": "pledges",
+		"label": "Pledges",
+		"views": [
+			{"key": "monthly", "label": "Monthly value by status", "total": "a month across all pledges"},
+			{"key": "status", "label": "Pledges by status", "total": "pledges"},
+			{"key": "frequency", "label": "Pledges by frequency", "total": "pledges"},
+		],
+	},
+	{
+		"key": "trips",
+		"label": "Trips",
+		"views": [
+			{"key": "status", "label": "Trips by status", "total": "trips"},
+			{"key": "month", "label": "Trips starting each month", "total": "trips starting in these 12 months"},
+			{"key": "applications", "label": "Applications by status", "total": "trip applications"},
+		],
+	},
+]
+
+TREND_MONTHS = 12
+
+
+@frappe.whitelist(methods=["GET"])
+def get_trend(subject: str, view: str) -> dict:
+	"""One trend for the chart panel: labels, one series of values, how to draw it, and whether
+	the values are money. Counts only what the reader is allowed to see."""
+	builders = {
+		("donations", "month"): _donations_by_month,
+		("donations", "fund"): lambda: _group(
+			"Mit Finances Donation", "fund", "amount", money=True, filters=_last_year("donation_date")
+		),
+		("donations", "method"): lambda: _group(
+			"Mit Finances Donation", "payment_method", "amount", money=True, filters=_last_year("donation_date")
+		),
+		("donations", "givers"): _givers_by_month,
+		("pledges", "monthly"): _pledges_monthly_by_status,
+		("pledges", "status"): lambda: _group("Mit Finances Pledge", "status"),
+		("pledges", "frequency"): lambda: _group("Mit Finances Pledge", "frequency"),
+		("trips", "status"): lambda: _group("Mit Trip", "status"),
+		("trips", "month"): _trips_by_month,
+		("trips", "applications"): lambda: _group("Mit Trip Application", "status"),
 	}
+	build = builders.get((subject, view))
+	if not build:
+		frappe.throw(frappe._("There is no {0} trend called {1}.").format(subject, view))
+	return build()
+
+
+def _trend(labels, values, kind="bar", money=False, currency=None, total=None) -> dict:
+	return {
+		"labels": labels,
+		"values": values,
+		"type": kind,
+		"money": money,
+		"currency": currency,
+		"total": sum(values) if total is None else total,
+	}
+
+
+def _group(
+	doctype: str, field: str, amount: str | None = None, money: bool = False, filters: dict | None = None
+) -> dict:
+	"""Count (or sum *amount*) of *doctype* grouped by *field*, largest first."""
+	fields = ["name", field] + ([amount] if amount else []) + (["currency"] if money else [])
+	totals = {}
+	currencies = set()
+	for row in _list(doctype, filters or {}, fields):
+		key = row.get(field) or frappe._("Not set")
+		totals[key] = totals.get(key, 0) + ((row.get(amount) or 0) if amount else 1)
+		if money and row.get("currency"):
+			currencies.add(row.currency)
+	ordered = sorted(totals.items(), key=lambda kv: kv[1], reverse=True)
+	return _trend(
+		[k for k, _ in ordered],
+		[round(v, 2) for _, v in ordered],
+		money=money,
+		currency=currencies.pop() if len(currencies) == 1 else None,
+	)
+
+
+def _month_keys(start, months: int) -> list:
+	"""The first day of each of *months* months from *start*."""
+	keys = []
+	date = start.replace(day=1)
+	for _ in range(months):
+		keys.append(date)
+		date = frappe.utils.add_months(date, 1)
+	return keys
+
+
+def _month_labels(months: list) -> list[str]:
+	"""Short month names, with the year on the first month and on each January."""
+	return [m.strftime("%b %Y") if i == 0 or m.month == 1 else m.strftime("%b") for i, m in enumerate(months)]
+
+
+def _last_year(field: str) -> dict:
+	return {field: [">=", _last_months()[0]]}
+
+
+def _last_months() -> list:
+	today = frappe.utils.getdate()
+	return _month_keys(frappe.utils.add_months(today, -(TREND_MONTHS - 1)), TREND_MONTHS)
+
+
+def _by_month(rows, date_field: str, months: list, value=lambda row: 1) -> list:
+	index = {(m.year, m.month): i for i, m in enumerate(months)}
+	values = [0] * len(months)
+	for row in rows:
+		date = row.get(date_field)
+		if not date:
+			continue
+		date = frappe.utils.getdate(date)
+		i = index.get((date.year, date.month))
+		if i is not None:
+			values[i] += value(row)
+	return values
+
+
+def _donations_by_month() -> dict:
+	months = _last_months()
+	rows = _list(
+		"Mit Finances Donation",
+		{"donation_date": [">=", months[0]]},
+		["name", "donation_date", "amount", "currency"],
+	)
+	values = [round(v, 2) for v in _by_month(rows, "donation_date", months, lambda r: r.amount or 0)]
+	currencies = {r.currency for r in rows if r.currency}
+	return _trend(
+		_month_labels(months),
+		values,
+		kind="line",
+		money=True,
+		currency=currencies.pop() if len(currencies) == 1 else None,
+	)
+
+
+def _givers_by_month() -> dict:
+	"""Distinct supporters who gave in each of the last twelve months."""
+	months = _last_months()
+	rows = _list(
+		"Mit Finances Donation", {"donation_date": [">=", months[0]]}, ["name", "donation_date", "supporter"]
+	)
+	seen = [set() for _ in months]
+	index = {(m.year, m.month): i for i, m in enumerate(months)}
+	for row in rows:
+		date = frappe.utils.getdate(row.donation_date) if row.donation_date else None
+		i = index.get((date.year, date.month)) if date else None
+		if i is not None and row.supporter:
+			seen[i].add(row.supporter)
+	givers = {s for month in seen for s in month}
+	return _trend(_month_labels(months), [len(s) for s in seen], total=len(givers))
+
+
+def _pledges_monthly_by_status() -> dict:
+	"""What each pledge status is worth a month, so promised and paused support can be weighed
+	against what is giving."""
+	totals = {}
+	currencies = set()
+	for row in _list("Mit Finances Pledge", {}, ["name", "status", "amount", "frequency", "currency"]):
+		monthly = (row.amount or 0) * PER_MONTH.get(row.frequency, 0)
+		if not monthly:
+			continue
+		totals[row.status] = totals.get(row.status, 0) + monthly
+		if row.currency:
+			currencies.add(row.currency)
+	order = ["Giving", "Promised", "Paused", "Lapsed", "Ended"]
+	labels = [s for s in order if s in totals] + [s for s in totals if s not in order]
+	return _trend(
+		labels,
+		[round(totals[s], 2) for s in labels],
+		money=True,
+		currency=currencies.pop() if len(currencies) == 1 else None,
+	)
+
+
+def _trips_by_month() -> dict:
+	"""Trips starting in each month, from six months back to five ahead."""
+	today = frappe.utils.getdate()
+	months = _month_keys(frappe.utils.add_months(today, -6), TREND_MONTHS)
+	rows = _list(
+		"Mit Trip",
+		{"start_date": ["between", [months[0], frappe.utils.add_months(months[-1], 1)]], "status": ["!=", "Cancelled"]},
+		["name", "start_date"],
+	)
+	return _trend(_month_labels(months), _by_month(rows, "start_date", months))
 
 
 def _count(doctype: str, filters: dict, title: str) -> int:
