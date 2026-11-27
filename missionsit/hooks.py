@@ -26,6 +26,8 @@ after_install = "missionsit.setup.after_install"
 website_route_rules = [
 	{"from_route": "/donate/<slug>", "to_route": "donate"},
 	{"from_route": "/apply/<trip>", "to_route": "apply"},
+	# The public web app is a single page app; every path under /missions serves it.
+	{"from_route": "/missions/<path:app_path>", "to_route": "missions"},
 ]
 
 doc_events = {

@@ -11,3 +11,4 @@ missionsit.patches.summary_page_at_module_root
 missionsit.patches.reattach_module_sidebars
 missionsit.patches.rename_website_to_web_app
 missionsit.patches.rename_nav_to_unique_names
+missionsit.patches.web_app_home_page

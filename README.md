@@ -109,6 +109,19 @@ bench --site your-site.localhost install-app missionsit
 bench --site your-site.localhost migrate
 ```
 
+## 🌍 Web app
+
+The public web app (missionaries, trips, giving and the member portal) is a Vue 3 and [frappe-ui](https://github.com/frappe/frappe-ui) single page app in `frontend/`, served by the site at `/missions`. It uses yarn.
+
+```bash
+cd frontend
+yarn install
+yarn dev     # dev server with hot reload, proxied to your bench
+yarn build   # writes missionsit/public/frontend and missionsit/www/missions.html
+```
+
+`bench build` runs the build for you through the root `package.json`. In the desk, **Web App** opens a home page for running it: switch signups, online giving and trip applications on or off, and see what is still missing before it looks finished.
+
 ## ⚙️ Stripe setup
 
 1. Open **Payment Gateway Account** and create one with `payment_gateway` set to **Stripe**, `is_default` checked, and your Stripe keys.

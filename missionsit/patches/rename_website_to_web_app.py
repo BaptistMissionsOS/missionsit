@@ -25,7 +25,9 @@ def execute():
 		("mit_website", "workspace", "web_app", "web_app.json"),
 		("dock", "missionsit", "missionsit.json"),
 	):
-		import_file_by_path(os.path.join(app_path, *path), force=True, reset_permissions=True)
+		# The workspace file was later replaced by the web-app page; skip what is gone.
+		if os.path.exists(os.path.join(app_path, *path)):
+			import_file_by_path(os.path.join(app_path, *path), force=True, reset_permissions=True)
 
 	if frappe.db.exists("Desktop Icon", "Mit Website") and not frappe.db.exists("Desktop Icon", "Web App"):
 		frappe.rename_doc("Desktop Icon", "Mit Website", "Web App", force=True, show_alert=False)
