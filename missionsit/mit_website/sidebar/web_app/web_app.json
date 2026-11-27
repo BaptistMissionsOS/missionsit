@@ -16,11 +16,11 @@
    "is_default_module": 0,
    "keep_closed": 0,
    "label": "Home",
-   "link_type": "Workspace",
+   "link_type": "Page",
    "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link",
-   "link_to": "Web App"
+   "link_to": "web-app"
   },
   {
    "added": 0,
@@ -87,7 +87,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-11-26 12:00:00.000000",
+ "modified": "2026-11-27 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Mit Website",
  "name": "Web App",
