@@ -400,11 +400,13 @@
 	gap: 2px;
 }
 
+/* The action sits right after its item, not at the far edge of a full-width row. */
 .ov-cal__item {
 	display: grid;
-	grid-template-columns: 20px minmax(0, 1fr) auto;
+	grid-template-columns: 20px minmax(0, max-content) auto;
+	justify-content: start;
 	align-items: center;
-	gap: 10px;
+	gap: 10px 16px;
 	min-height: 36px;
 }
 

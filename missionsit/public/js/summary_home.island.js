@@ -654,8 +654,6 @@ const App = {
 										: null,
 							  ])
 							: null,
-
-						h(Calendar, { initial: state.coming_up, later: state.coming_later }),
 					]),
 
 					h("section", { class: "ov-block ov-block--ledger", "aria-labelledby": "ov-ledger" }, [
@@ -687,6 +685,10 @@ const App = {
 						),
 					]),
 				]),
+
+				// Full width, like Trends, so a longer range grows down the page rather than
+				// leaving a gap beside the ledger.
+				h(Calendar, { initial: state.coming_up, later: state.coming_later }),
 
 				state.trends.length ? h(TrendPanel, { menu: state.trends }) : null,
 
