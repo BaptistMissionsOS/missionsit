@@ -43,7 +43,7 @@ class MitCorrespondenceEmailCampaign(Document):
 		if not group_missionary:
 			return []
 		rows = frappe.get_all(
-			"Supporter",
+			"Mit People Supporter",
 			filters={"missionary": group_missionary, "consent_email": 1},
 			pluck="email",
 		)

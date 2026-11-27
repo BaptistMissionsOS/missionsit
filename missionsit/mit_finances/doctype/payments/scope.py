@@ -32,7 +32,7 @@ def missionary_permission_query(user: str) -> str:
 def _organizations_for_user(user: str) -> list[str]:
 	"""Return Organization names where *user* is listed as the primary admin or contact."""
 	return frappe.get_all(
-		"Organization",
+		"Mit People Organization",
 		filters={"admin_user": user},
 		pluck="name",
 	)

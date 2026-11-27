@@ -10,7 +10,7 @@ from frappe.utils import now
 def send_due_campaigns():
 	"""Send every Scheduled campaign whose scheduled_date has passed."""
 	due = frappe.get_all(
-		"Email Campaign",
+		"Mit Correspondence Email Campaign",
 		filters={"status": "Scheduled", "scheduled_date": ["<=", now()]},
 		pluck="name",
 	)

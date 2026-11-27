@@ -58,7 +58,7 @@ def own_church_names(user):
 	if missionary.sending_church:
 		names.add(missionary.sending_church)
 	for project in frappe.get_all(
-		"Ministry Project",
+		"Mit Ministries Project",
 		filters={"missionary": missionary.name, "project_type": "Church Plant"},
 		fields=["church"],
 	):
