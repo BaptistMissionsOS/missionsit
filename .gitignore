@@ -35,5 +35,5 @@ Thumbs.db
 
 # Web app build (yarn build in missionsit/frontend writes these)
 node_modules/
-missionsit/missionsit/public/frontend/
-missionsit/missionsit/www/missions.html
+missionsit/public/frontend/
+missionsit/www/missions.html
