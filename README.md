@@ -120,6 +120,12 @@ yarn dev     # dev server with hot reload, proxied to your bench
 yarn build   # writes missionsit/public/frontend and missionsit/www/missions.html
 ```
 
+The Church Directory map draws a MapLibre GL vector style under Leaflet. It uses [OpenFreeMap](https://openfreemap.org)'s Positron style, which needs no API key. To use your own tile server, set its style URL in the site config:
+
+```bash
+bench --site your-site.localhost set-config missions_map_style "https://tiles.example.org/styles/positron/style.json"
+```
+
 `bench build` runs the build for you through the root `package.json`. In the desk, **Web App** opens a home page for running it: switch signups, online giving and trip applications on or off, and see what is still missing before it looks finished.
 
 ## ⚙️ Stripe setup

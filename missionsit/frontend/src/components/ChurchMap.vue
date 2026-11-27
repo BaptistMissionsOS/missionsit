@@ -7,6 +7,9 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import L from '@/leaflet'
 import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import '@maplibre/maplibre-gl-leaflet'
+import { site } from '@/data'
 
 const props = defineProps({
   churches: { type: Array, default: () => [] },
@@ -58,6 +61,30 @@ function draw() {
   else map.fitBounds(bounds, { padding: [24, 24], maxZoom: 9 })
 }
 
+// The base map is a MapLibre GL vector style drawn under Leaflet, so it stays sharp at every
+// zoom. The style URL comes from the site (OpenFreeMap's Positron unless the site config names
+// its own tile server). If WebGL is unavailable, fall back to OpenStreetMap's raster tiles.
+const ATTRIBUTION =
+  '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+let base = null
+let baseStyle = null
+
+function setBase(style) {
+  if (!map || !style || style === baseStyle) return
+  base?.remove()
+  baseStyle = style
+  try {
+    base = L.maplibreGL({ style, attribution: ATTRIBUTION, interactive: false }).addTo(map)
+  } catch {
+    base = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      noWrap: true,
+      bounds: WORLD,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map)
+  }
+}
+
 // One world, edge to edge: the map cannot be dragged past it, and at its furthest zoom the
 // world exactly fills the box's width, so there are no grey bands and no repeated copies.
 const WORLD = L.latLngBounds([-60, -180], [84, 180])
@@ -78,6 +105,8 @@ onMounted(() => {
     center: [24, 10],
     zoom: 2,
     zoomSnap: 0.25,
+    // The cluster plugin needs a top zoom; vector tiles stay sharp well past street level.
+    maxZoom: 18,
     maxBounds: WORLD.pad(0.05),
     maxBoundsViscosity: 1,
     scrollWheelZoom: false,
@@ -86,15 +115,7 @@ onMounted(() => {
     doubleClickZoom: props.interactive,
     attributionControl: true,
   })
-  // OpenStreetMap's own tiles need no API key. The church-map__tiles class quiets them to soft
-  // greys (see the style below), so the blue churches stand out.
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    noWrap: true,
-    bounds: WORLD,
-    className: 'church-map__tiles',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map)
+  setBase(site.data?.map_style)
   fitWorldWidth()
   draw()
   resize = new ResizeObserver(() => {
@@ -104,6 +125,8 @@ onMounted(() => {
   resize.observe(el.value)
 })
 watch(() => props.churches, draw)
+// The site settings may arrive after the map is drawn.
+watch(() => site.data?.map_style, setBase)
 onBeforeUnmount(() => {
   resize?.disconnect()
   map?.remove()
@@ -113,7 +136,7 @@ onBeforeUnmount(() => {
 <template>
   <div
     ref="el"
-    class="isolate z-0 w-full overflow-hidden rounded-7 border border-ink/10 bg-[#D4DADC]"
+    class="isolate z-0 w-full overflow-hidden rounded-7 border border-ink/10 bg-[#F2F3F0]"
     :style="{ height }"
     role="region"
     :aria-label="`Map of ${churches.length.toLocaleString()} churches`"
@@ -121,11 +144,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style>
-/* OpenStreetMap's colours, quieted: grey land and sea, labels still legible. */
-.church-map__tiles {
-  filter: grayscale(1) brightness(1.06) contrast(0.88);
-}
-
 .church-pin {
   border: 2px solid #fff;
   border-radius: 50%;

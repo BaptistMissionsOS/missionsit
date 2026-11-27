@@ -16,6 +16,10 @@ from frappe.rate_limiter import rate_limit
 
 UPCOMING_TRIP_STATUSES = ("Planning", "Open", "Full")
 
+# The church map's MapLibre style. OpenFreeMap needs no key; to use your own tile server, set
+# "missions_map_style" in site_config.json to its style URL.
+DEFAULT_MAP_STYLE = "https://tiles.openfreemap.org/styles/positron"
+
 
 @frappe.whitelist(allow_guest=True)
 def get_site() -> dict:
@@ -31,6 +35,7 @@ def get_site() -> dict:
 		"enable_donations": bool(portal.enable_donations),
 		"enable_trip_applications": bool(portal.enable_trip_applications),
 		"user": _session_user(),
+		"map_style": frappe.conf.get("missions_map_style") or DEFAULT_MAP_STYLE,
 		"counts": {
 			"missionaries": len(profiles),
 			"countries": len(countries),
