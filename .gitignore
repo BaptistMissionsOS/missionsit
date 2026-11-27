@@ -33,7 +33,7 @@ Thumbs.db
 # Claude Code
 .claude/
 
-# Web app build (yarn build in /frontend writes these)
+# Web app build (yarn build in missionsit/frontend writes these)
 node_modules/
-missionsit/public/frontend/
-missionsit/www/missions.html
+missionsit/missionsit/public/frontend/
+missionsit/missionsit/www/missions.html
