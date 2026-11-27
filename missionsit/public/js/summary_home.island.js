@@ -120,7 +120,7 @@ const SupportLevel = {
 };
 
 const ComingUp = {
-	props: { items: Array },
+	props: { items: Array, later: Boolean },
 	setup(props) {
 		const fmt = (iso) => {
 			const d = new Date(`${iso}T00:00:00`);
@@ -134,7 +134,7 @@ const ComingUp = {
 		return () =>
 			h(
 				"ol",
-				{ class: "ov-coming" },
+				{ class: ["ov-coming", props.later && "ov-coming--later"] },
 				props.items.map((item) =>
 					h(
 						"li",
@@ -374,6 +374,7 @@ const App = {
 			verse: "",
 			support: null,
 			coming_up: [],
+			coming_later: [],
 			shortcuts: [],
 			attention: [],
 			cards: [],
@@ -391,6 +392,7 @@ const App = {
 					verse: data.verse || "",
 					support: data.support || null,
 					coming_up: data.coming_up || [],
+					coming_later: data.coming_later || [],
 					shortcuts: data.shortcuts || [],
 					attention: data.attention || [],
 					cards: data.cards || [],
@@ -469,11 +471,13 @@ const App = {
 							h("h2", { class: "ov-heading", id: "ov-coming" }, __("Coming up")),
 							state.coming_up.length
 								? h(ComingUp, { items: state.coming_up })
-								: h(
-										"p",
-										{ class: "ov-quiet" },
+								: h("p", { class: "ov-quiet" }, [
 										__("Nothing on the calendar for the next two weeks."),
-								  ),
+										state.coming_later.length ? " " + __("Next up:") : "",
+								  ]),
+							!state.coming_up.length && state.coming_later.length
+								? h(ComingUp, { items: state.coming_later, later: true })
+								: null,
 						]),
 					]),
 

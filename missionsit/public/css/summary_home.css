@@ -293,6 +293,15 @@
 	border-top: 1px solid var(--ov-line);
 }
 
+.ov-coming--later {
+	margin-top: 12px;
+}
+
+/* Further off than the fortnight: the dates step back from airmail blue. */
+.ov-coming--later .ov-coming__date {
+	color: var(--ov-muted);
+}
+
 .ov-coming__item {
 	border-bottom: 1px solid var(--ov-line);
 }

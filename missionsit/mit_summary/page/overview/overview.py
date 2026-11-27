@@ -30,6 +30,7 @@ CARDS = [
 
 
 COMING_UP_DAYS = 14
+LATER_DAYS = 180
 RECEIPT_WINDOW_DAYS = 90
 FOLLOW_UP_WINDOW_DAYS = 14
 
@@ -95,10 +96,13 @@ def attention_rows(user: str) -> list[tuple]:
 def get_dashboard() -> dict:
 	"""The Overview dashboard, every section at once. Reads only, and counts only what the reader
 	is allowed to see."""
+	coming_up = get_coming_up()
 	return {
 		"verse": INTRO_VERSE,
 		"support": get_support(),
-		"coming_up": get_coming_up(),
+		"coming_up": coming_up,
+		# Only looked for when the fortnight is empty, so the page still says what is next.
+		"coming_later": [] if coming_up else get_coming_up(days=LATER_DAYS, limit=3),
 		"shortcuts": get_shortcuts(),
 		"attention": get_attention(),
 		"cards": [card_payload(name) for name in CARDS if frappe.db.exists("Number Card", name)],
@@ -195,11 +199,11 @@ def get_support() -> dict | None:
 	}
 
 
-def get_coming_up() -> list[dict]:
-	"""Dated things in the next fortnight: church visits, trips, furlough, scheduled emails, and
-	supporters' birthdays and anniversaries. Soonest first."""
+def get_coming_up(days: int = COMING_UP_DAYS, limit: int = 12) -> list[dict]:
+	"""Dated things in the next *days* days: church visits, trips, furlough, scheduled emails, and
+	supporters' birthdays and anniversaries. Soonest first, at most *limit*."""
 	today = frappe.utils.getdate()
-	until = frappe.utils.add_days(today, COMING_UP_DAYS - 1)
+	until = frappe.utils.add_days(today, days - 1)
 	window = ["between", [today, until]]
 	items = []
 
@@ -255,7 +259,7 @@ def get_coming_up() -> list[dict]:
 				add(date, kind, s.full_name or s.name, s.doctype, s.name, icon)
 
 	items.sort(key=lambda i: (i["date"], i["kind"], i["title"]))
-	return items[:12]
+	return items[:limit]
 
 
 def get_website() -> dict:
