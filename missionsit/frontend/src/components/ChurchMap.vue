@@ -86,14 +86,14 @@ onMounted(() => {
     doubleClickZoom: props.interactive,
     attributionControl: true,
   })
-  // CARTO's Positron: OpenStreetMap data drawn in quiet greys, so the blue churches stand out.
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd',
+  // OpenStreetMap's own tiles need no API key. The church-map__tiles class quiets them to soft
+  // greys (see the style below), so the blue churches stand out.
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     noWrap: true,
     bounds: WORLD,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    className: 'church-map__tiles',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map)
   fitWorldWidth()
   draw()
@@ -121,6 +121,11 @@ onBeforeUnmount(() => {
 </template>
 
 <style>
+/* OpenStreetMap's colours, quieted: grey land and sea, labels still legible. */
+.church-map__tiles {
+  filter: grayscale(1) brightness(1.06) contrast(0.88);
+}
+
 .church-pin {
   border: 2px solid #fff;
   border-radius: 50%;
