@@ -44,6 +44,19 @@ function draw() {
     spiderfyOnMaxZoom: true,
     maxClusterRadius: 50,
     iconCreateFunction: clusterIcon,
+    // Our own click below: zooming to fit a cluster's churches can barely move the map when
+    // they are spread far apart (across the date line, say), which looks like nothing happened.
+    zoomToBoundsOnClick: false,
+  })
+  clusters.on('clusterclick', (event) => {
+    const cluster = event.layer
+    const max = map.getMaxZoom()
+    if (map.getZoom() >= max) return cluster.spiderfy()
+    // Two to five levels closer, centred on the cluster: closer when its churches fit, but
+    // never one jump from the whole world to a single street.
+    const zoom = map.getZoom()
+    const fit = map.getBoundsZoom(cluster.getBounds(), false, L.point(48, 48))
+    map.flyTo(cluster.getLatLng(), Math.min(max, zoom + 5, Math.max(zoom + 2, fit)), { duration: 0.6 })
   })
   clusters.addLayers(
     props.churches.map((c) =>
