@@ -109,7 +109,10 @@ onMounted(() => {
     maxZoom: 18,
     maxBounds: WORLD.pad(0.05),
     maxBoundsViscosity: 1,
-    scrollWheelZoom: false,
+    // The Directory map zooms with the mouse wheel; the Home preview does not, so scrolling the
+    // page past it is never caught by the map.
+    scrollWheelZoom: props.interactive,
+    wheelPxPerZoomLevel: 90,
     dragging: props.interactive,
     zoomControl: props.interactive,
     doubleClickZoom: props.interactive,
